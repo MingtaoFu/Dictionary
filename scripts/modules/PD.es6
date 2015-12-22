@@ -27,7 +27,7 @@ class CursorNode extends Word{
 	}
 }
 
-class CursorSpace {
+export class CursorSpace {
 	constructor(n) {
 		//生成该游标空间时，自动初始化
 		this.createCursor(n);
@@ -37,11 +37,11 @@ class CursorSpace {
 		this.arr = [];
 		for (var i = 0; i < n; i++) {
 			var cursorNode = new CursorNode();
-			this.arr[i].next = i + 1;
+			cursorNode.next = i + 1;
 			if(n - 1 == i) {
-				this.arr[i].next = 0;
+				cursorNode.next = 0;
 			}
-            this.arr.append(cursorNode);
+            this.arr.push(cursorNode);
 		}
 	}
 
@@ -57,4 +57,4 @@ class CursorSpace {
 	}
 }
 
-exports.modules = {Word, CursorSpace, CursorNode};
+export {CursorSpace};

@@ -46,30 +46,135 @@
 
 	'use strict';
 
-	__webpack_require__(1);
+	var _PD = __webpack_require__(1);
+
+	__webpack_require__(2);
 	/*
 	var Man = require('./modules/test.js');
 	var mingtao = new Man('tao');
 	mingtao.sayHi();
 	*/
-	var Man = __webpack_require__(5);
-	var xx = __webpack_require__(6);
-	__webpack_require__(7);
+	var Man = __webpack_require__(6);
+	var xx = __webpack_require__(7);
+
 	//import './modules/BaseClass.es6';
-	var cursorSpace = new CursorSpace(10000);
-	console.log(Man);
+	var cursorSpace = new _PD.CursorSpace(10000);
+	console.log(cursorSpace);
 
 /***/ },
 /* 1 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Word = (function () {
+		function Word(spelling, meaning) {
+			_classCallCheck(this, Word);
+
+			this.spelling = spelling;
+			this.meaning = meaning;
+		}
+
+		/**
+	 * setter and getter
+	 */
+
+		//搜索匹配，含部分匹配
+
+		_createClass(Word, [{
+			key: "match",
+			value: function match(str) {}
+
+			//验证是否已经存在了此词
+
+		}, {
+			key: "validateUnique",
+			value: function validateUnique() {}
+		}]);
+
+		return Word;
+	})();
+
+	var CursorNode = (function (_Word) {
+		_inherits(CursorNode, _Word);
+
+		function CursorNode(spelling, meaning, position, nextP) {
+			_classCallCheck(this, CursorNode);
+
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CursorNode).call(this, spelling, meaning));
+
+			_this.position = position;
+			_this.nextP = nextP;
+			return _this;
+		}
+
+		return CursorNode;
+	})(Word);
+
+	var CursorSpace = exports.CursorSpace = (function () {
+		function CursorSpace(n) {
+			_classCallCheck(this, CursorSpace);
+
+			//生成该游标空间时，自动初始化
+			this.createCursor(n);
+		}
+
+		_createClass(CursorSpace, [{
+			key: "createCursor",
+			value: function createCursor(n) {
+				this.arr = [];
+				for (var i = 0; i < n; i++) {
+					var cursorNode = new CursorNode();
+					cursorNode.next = i + 1;
+					if (n - 1 == i) {
+						cursorNode.next = 0;
+					}
+					this.arr.push(cursorNode);
+				}
+			}
+		}, {
+			key: "malloc",
+			value: function malloc() {
+				var p = this.arr[0].next;
+				this.arr[0].next = this.arr[p].next;
+				return p;
+			}
+		}, {
+			key: "free",
+			value: function free(p) {
+				this.arr[p].next = this.arr[0].next;
+				this.arr[0].next = p;
+			}
+		}]);
+
+		return CursorSpace;
+	})();
+
+	exports.CursorSpace = CursorSpace;
+
+/***/ },
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(2);
+	var content = __webpack_require__(3);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(4)(content, {});
+	var update = __webpack_require__(5)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -86,10 +191,10 @@
 	}
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(3)();
+	exports = module.exports = __webpack_require__(4)();
 	// imports
 
 
@@ -100,7 +205,7 @@
 
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports) {
 
 	/*
@@ -156,7 +261,7 @@
 
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -410,7 +515,7 @@
 
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports) {
 
 	/*class Person {
@@ -432,7 +537,7 @@
 
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -459,18 +564,6 @@
 	})();
 
 	exports.modules = Person;
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Node = function Node() {
-		_classCallCheck(this, Node);
-	};
 
 /***/ }
 /******/ ]);
