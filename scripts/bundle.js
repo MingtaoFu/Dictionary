@@ -45,79 +45,31 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
-	__webpack_require__(3);
+
+	__webpack_require__(1);
 	/*
 	var Man = require('./modules/test.js');
 	var mingtao = new Man('tao');
 	mingtao.sayHi();
 	*/
-	var Man = __webpack_require__(1);
-	var xx = __webpack_require__(2);
+	var Man = __webpack_require__(5);
+	var xx = __webpack_require__(6);
+	__webpack_require__(7);
+	//import './modules/BaseClass.es6';
+	var cursorSpace = new CursorSpace(10000);
 	console.log(Man);
-
 
 /***/ },
 /* 1 */
-/***/ function(module, exports) {
-
-	/*class Person {
-		constructor(name) {
-			this.name = name;
-		}
-		sayHi() {
-			console.log('hi');
-		}
-	}
-
-	exports.module = Person;
-	*/
-	var a = {
-		aa: 3
-	}
-
-	exports.module = a;
-
-
-/***/ },
-/* 2 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Person = (function () {
-		function Person(name) {
-			_classCallCheck(this, Person);
-
-			this.name = name;
-		}
-
-		_createClass(Person, [{
-			key: 'sayHi',
-			value: function sayHi() {
-				console.log('hi');
-			}
-		}]);
-
-		return Person;
-	})();
-
-	exports.modules = Person;
-
-/***/ },
-/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(4);
+	var content = __webpack_require__(2);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(6)(content, {});
+	var update = __webpack_require__(4)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -134,10 +86,10 @@
 	}
 
 /***/ },
-/* 4 */
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(5)();
+	exports = module.exports = __webpack_require__(3)();
 	// imports
 
 
@@ -148,7 +100,7 @@
 
 
 /***/ },
-/* 5 */
+/* 3 */
 /***/ function(module, exports) {
 
 	/*
@@ -204,7 +156,7 @@
 
 
 /***/ },
-/* 6 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -456,6 +408,69 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	/*class Person {
+		constructor(name) {
+			this.name = name;
+		}
+		sayHi() {
+			console.log('hi');
+		}
+	}
+
+	exports.module = Person;
+	*/
+	var a = {
+		aa: 3
+	}
+
+	exports.module = a;
+
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Person = (function () {
+		function Person(name) {
+			_classCallCheck(this, Person);
+
+			this.name = name;
+		}
+
+		_createClass(Person, [{
+			key: 'sayHi',
+			value: function sayHi() {
+				console.log('hi');
+			}
+		}]);
+
+		return Person;
+	})();
+
+	exports.modules = Person;
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Node = function Node() {
+		_classCallCheck(this, Node);
+	};
 
 /***/ }
 /******/ ]);

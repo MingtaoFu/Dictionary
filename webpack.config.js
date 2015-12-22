@@ -1,5 +1,5 @@
 module.exports = {
-    entry: "./scripts/entry.js",
+    entry: "./scripts/entry.es6",
     output: {
         path: __dirname,
         filename: "scripts/bundle.js"
@@ -14,9 +14,18 @@ module.exports = {
                     presets: ['es2015']
                 }
             },
-            {test: /\.css$/, loader: "style!css"},
-            {test: /\.(jpg|png)$/, loader: "url?limit=8192"},
-            {test: /\.scss$/, loader: "style!css!sass"}
+            {
+                test: /\.css$/,
+                loader: "style!css"
+            },
+            {
+                test: /\.(jpg|png)$/,
+                loader: "url?limit=8192"
+            },
+            {
+                test: /\.scss$/,
+                loader: "style!css!sass"
+            }
         ]
     }
 };
