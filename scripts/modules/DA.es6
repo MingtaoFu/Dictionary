@@ -1,11 +1,63 @@
-class DB{
+class DB {
     /**
      * 初始化数据库
      * 如果数据库存在，返回该对象
      * 否则新建
      */
-    static initDB(dbName) {
+    constructor(dbName) {
+        var dataBase = openDatabase(dbName, "1.0", "word DB", 1024 * 1024, function() {});
+        if (!dataBase) {
+            alert("开启/创建数据库失败。");
+        } else {
+            this._real_DB_obj = dataBase;
 
+            //Unique table
+            dataBase.transaction( function(tx) {
+                tx.executeSql(
+                    "create table if not exists Word (spelling varchar(32) UNIQUE)",
+                    [],
+                    function(tx,result){ console.log('创建Word表成功'); },
+                    function(tx, error){ console.log('创建word表失败: ' + error.message);
+                    }
+                );
+            });
+            //POS table
+            dataBase.transaction( function(tx) {
+                tx.executeSql(
+                    "create table if not exists POS " +
+                    "(POS varchar(16), word varchar(32), FOREIGN KEY (word) REFERENCES Word(spelling))",
+                    [],
+                    function(tx,result){ console.log('创建POS表成功'); },
+                    function(tx, error){ console.log('创建POS表失败: ' + error.message);
+                    }
+                );
+            });
+            //Meaning table
+            dataBase.transaction( function(tx) {
+                tx.executeSql(
+                    "create table if not exists Meaning " +
+                    "(id integer PRIMARY KEY AUTOINCREMENT, meaning varchar(32), word varchar(32), POS varchar(16)," +
+                    " FOREIGN KEY (word) REFERENCES Word(spelling))"
+                    /*+ " FOREIGN KEY (POS) REFERENCES POS(POS)) "*/,
+                    [],
+                    function(tx,result){ console.log('创建Meaning表成功'); },
+                    function(tx, error){ console.log('创建Meaning表失败: ' + error.message);
+                    }
+                );
+            });
+            //Sentence table
+            dataBase.transaction( function(tx) {
+                tx.executeSql(
+                    "create table if not exists Sentence " +
+                    "(id integer PRIMARY KEY AUTOINCREMENT, content varchar(256), meaning integer," +
+                    " FOREIGN KEY (meaning) REFERENCES Meaning(id))",
+                    [],
+                    function(tx,result){ console.log('创建Sentence表成功'); },
+                    function(tx, error){ console.log('创建Sentence表失败: ' + error.message);
+                    }
+                );
+            });
+        }
     }
 
     /**
@@ -31,3 +83,5 @@ class DB{
 
     }
 }
+
+export {DB};

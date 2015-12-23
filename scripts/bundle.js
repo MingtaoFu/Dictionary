@@ -46,6 +46,8 @@
 
 	'use strict';
 
+	__webpack_require__(9);
+
 	var _PD = __webpack_require__(1);
 
 	var PD = _interopRequireWildcard(_PD);
@@ -61,76 +63,144 @@
 
 /***/ },
 /* 1 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.WordTree = exports.Word = undefined;
+
+	var _DA = __webpack_require__(8);
+
+	var DA = _interopRequireWildcard(_DA);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+	var Meaning = (function () {
+	    function Meaning(pos, meaning) {
+	        _classCallCheck(this, Meaning);
+
+	        POS(pos);
+	        meaning(meaning);
+	    }
+
+	    /**
+	     * setters and getters
+	     */
+
+	    _createClass(Meaning, [{
+	        key: 'POS',
+	        set: function set(pos) {
+	            this._POS = pos;
+	        }
+	    }, {
+	        key: 'meaning',
+	        set: function set(meaning) {
+	            this._meaning = meaning;
+	        }
+	    }]);
+
+	    return Meaning;
+	})();
+
 	var Word = (function () {
-	  function Word(spelling, meaning) {
-	    _classCallCheck(this, Word);
+	    function Word(spelling, meaning) {
+	        _classCallCheck(this, Word);
 
-	    this.spelling = spelling;
-	    this.meaning = meaning;
-	  }
-
-	  /**
-	  * setter and getter
-	  */
-
-	  //搜索匹配，含部分匹配
-
-	  _createClass(Word, [{
-	    key: "match",
-	    value: function match(str) {}
-
-	    //验证是否已经存在了此词
-
-	  }, {
-	    key: "validateUnique",
-	    value: function validateUnique() {}
-	  }]);
-
-	  return Word;
-	})();
-
-	var wordTree = (function () {
-	  function wordTree() {
-	    _classCallCheck(this, wordTree);
-	  }
-
-	  _createClass(wordTree, [{
-	    key: "importDB",
+	        //字符串
+	        spelling(spelling);
+	        //数组
+	        meaning(meaning);
+	    }
 
 	    /**
-	     * 从数据库导入数据，赋给value属性
-	     * @param db 数据库对象
-	     */
-	    value: function importDB(db) {}
+	    * setters and getters
+	    */
 
-	    /**
-	     * 基本操作：增删查改
-	     */
+	    _createClass(Word, [{
+	        key: 'match',
 
-	  }, {
-	    key: "insert",
-	    value: function insert() {}
-	  }, {
-	    key: "del",
-	    value: function del() {}
-	  }, {
-	    key: "find",
-	    value: function find() {}
-	  }, {
-	    key: "update",
-	    value: function update() {}
-	  }]);
+	        //搜索匹配，含部分匹配
+	        value: function match(str) {}
 
-	  return wordTree;
+	        //验证是否已经存在了此词
+
+	    }, {
+	        key: 'validateUnique',
+	        value: function validateUnique() {}
+	    }, {
+	        key: 'spelling',
+	        set: function set(spelling) {
+	            this._spelling = spelling;
+	        }
+	    }, {
+	        key: 'meaning',
+	        set: function set(meaning) {
+	            this._meaning = meaning;
+	        }
+	    }]);
+
+	    return Word;
 	})();
+
+	var WordTree = (function () {
+	    function WordTree() {
+	        _classCallCheck(this, WordTree);
+	    }
+
+	    _createClass(WordTree, [{
+	        key: 'importDB',
+
+	        /**
+	         * 从数据库导入数据，赋给value属性
+	         * @param value 数据库对象
+	         */
+	        value: function importDB(value) {
+	            value(value);
+	        }
+
+	        /**
+	         * 基本操作：增删查改
+	         */
+
+	    }, {
+	        key: 'insert',
+	        value: function insert(db) {
+
+	            db.insert();
+	        }
+	    }, {
+	        key: 'del',
+	        value: function del() {}
+	    }, {
+	        key: 'find',
+	        value: function find() {}
+	    }, {
+	        key: 'update',
+	        value: function update() {}
+
+	        /**
+	         * setters and getters
+	         */
+
+	    }, {
+	        key: 'value',
+	        set: function set(value) {
+	            this._value = value;
+	        }
+	    }]);
+
+	    return WordTree;
+	})();
+
+	exports.Word = Word;
+	exports.WordTree = WordTree;
 
 /***/ },
 /* 2 */
@@ -481,6 +551,121 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
+
+/***/ },
+/* 6 */,
+/* 7 */,
+/* 8 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var DB = (function () {
+	    /**
+	     * 初始化数据库
+	     * 如果数据库存在，返回该对象
+	     * 否则新建
+	     */
+
+	    function DB(dbName) {
+	        _classCallCheck(this, DB);
+
+	        var dataBase = openDatabase(dbName, "1.0", "word DB", 1024 * 1024, function () {});
+	        if (!dataBase) {
+	            alert("开启/创建数据库失败。");
+	        } else {
+	            this._real_DB_obj = dataBase;
+
+	            //Unique table
+	            dataBase.transaction(function (tx) {
+	                tx.executeSql("create table if not exists Word (spelling varchar(32) UNIQUE)", [], function (tx, result) {
+	                    console.log('创建Word表成功');
+	                }, function (tx, error) {
+	                    console.log('创建word表失败: ' + error.message);
+	                });
+	            });
+	            //POS table
+	            dataBase.transaction(function (tx) {
+	                tx.executeSql("create table if not exists POS " + "(POS varchar(16), word varchar(32), FOREIGN KEY (word) REFERENCES Word(spelling))", [], function (tx, result) {
+	                    console.log('创建POS表成功');
+	                }, function (tx, error) {
+	                    console.log('创建POS表失败: ' + error.message);
+	                });
+	            });
+	            //Meaning table
+	            dataBase.transaction(function (tx) {
+	                tx.executeSql("create table if not exists Meaning " + "(id integer PRIMARY KEY AUTOINCREMENT, meaning varchar(32), word varchar(32), POS varchar(16)," + " FOREIGN KEY (word) REFERENCES Word(spelling))"
+	                /*+ " FOREIGN KEY (POS) REFERENCES POS(POS)) "*/
+	                , [], function (tx, result) {
+	                    console.log('创建Meaning表成功');
+	                }, function (tx, error) {
+	                    console.log('创建Meaning表失败: ' + error.message);
+	                });
+	            });
+	            //Sentence table
+	            dataBase.transaction(function (tx) {
+	                tx.executeSql("create table if not exists Sentence " + "(id integer PRIMARY KEY AUTOINCREMENT, content varchar(256), meaning integer," + " FOREIGN KEY (meaning) REFERENCES Meaning(id))", [], function (tx, result) {
+	                    console.log('创建Sentence表成功');
+	                }, function (tx, error) {
+	                    console.log('创建Sentence表失败: ' + error.message);
+	                });
+	            });
+	        }
+	    }
+
+	    /**
+	     * 返回整个数据库的数据
+	     * 它们将直接存入内存，以便快速搜索
+	     */
+
+	    _createClass(DB, [{
+	        key: "outputDB",
+	        value: function outputDB() {}
+
+	        /**
+	         * 基本的数据库操作：增删改
+	         * 由于数据一次性输出，所以没有查询
+	         */
+
+	    }, {
+	        key: "insert",
+	        value: function insert() {}
+	    }, {
+	        key: "del",
+	        value: function del() {}
+	    }, {
+	        key: "update",
+	        value: function update() {}
+	    }]);
+
+	    return DB;
+	})();
+
+	exports.DB = DB;
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _DA = __webpack_require__(8);
+
+	var DA = _interopRequireWildcard(_DA);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	//创建数据库
+	var dataBase = new DA.DB();
+	console.log(dataBase);
 
 /***/ }
 /******/ ]);

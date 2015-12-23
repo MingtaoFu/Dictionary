@@ -1,12 +1,41 @@
+import * as DA from './DA.es6';
+
+class Meaning {
+    constructor(pos, meaning) {
+        POS(pos);
+        meaning(meaning);
+
+    }
+
+    /**
+     * setters and getters
+     */
+    set POS(pos) {
+        this._POS = pos;
+    }
+
+    set meaning(meaning) {
+        this._meaning = meaning;
+    }
+}
+
 class Word {
 	constructor(spelling, meaning) {
-		this.spelling = spelling;
-		this.meaning = meaning;
+        //字符串
+        spelling(spelling);
+        //数组
+        meaning(meaning);
 	}
 
 	/**
-	* setter and getter
+	* setters and getters
 	*/
+    set spelling(spelling) {
+        this._spelling = spelling;
+    }
+    set meaning(meaning) {
+        this._meaning = meaning;
+    }
 
 	//搜索匹配，含部分匹配
 	match(str) {
@@ -19,20 +48,21 @@ class Word {
 	}
 }
 
-class wordTree {
+class WordTree {
     /**
      * 从数据库导入数据，赋给value属性
-     * @param db 数据库对象
+     * @param value 数据库对象
      */
-    importDB(db) {
-
+    importDB(value) {
+        value(value);
     }
 
     /**
      * 基本操作：增删查改
      */
-    insert() {
+    insert(db) {
 
+        db.insert();
     }
 
     del() {
@@ -46,4 +76,13 @@ class wordTree {
     update() {
 
     }
+
+    /**
+     * setters and getters
+     */
+    set value(value) {
+        this._value = value;
+    }
 }
+
+export {Word, WordTree};
