@@ -631,16 +631,32 @@
 	        value: function outputDB() {}
 
 	        /**
-	         * 基本的数据库操作：增删改
+	         * 基本的数据库操作：增删查改
 	         * 由于数据一次性输出，所以没有查询
 	         */
 
 	    }, {
 	        key: "insert",
-	        value: function insert() {}
+	        value: function insert(word) {
+	            this.find(word).then(function (value) {});
+	        }
 	    }, {
 	        key: "del",
 	        value: function del() {}
+	    }, {
+	        key: "find",
+	        value: function find(word) {
+	            var that = this;
+	            return new Promise(function (resolve, reject) {
+	                that._real_DB_obj.transaction(function (tx) {
+	                    tx.executeSql("select spelling from Word where spelling = ?", [word], function (tx, result) {
+	                        resolve(result.rows);
+	                    }, function (tx, error) {
+	                        console.log("查询失败: " + error.message);
+	                    });
+	                });
+	            });
+	        }
 	    }, {
 	        key: "update",
 	        value: function update() {}
@@ -666,6 +682,12 @@
 	//创建数据库
 	var dataBase = new DA.DB();
 	console.log(dataBase);
+
+	dataBase.insert('xx');
+	var result = dataBase.find('xx');
+	result.then(function (value) {
+	    console.log(value);
+	});
 
 /***/ }
 /******/ ]);

@@ -69,16 +69,37 @@ class DB {
     }
 
     /**
-     * 基本的数据库操作：增删改
+     * 基本的数据库操作：增删查改
      * 由于数据一次性输出，所以没有查询
      */
-    insert() {
+    insert(word) {
+        this.find(word).then(function(value) {
 
+        });
     }
 
     del() {
 
     }
+
+    find(word) {
+        var that = this;
+        return new Promise(function(resolve, reject) {
+            that._real_DB_obj.transaction( function(tx) {
+                tx.executeSql(
+                    "select spelling from Word where spelling = ?",
+                    [word],
+                    function(tx, result) {
+                        resolve(result.rows);
+                    },
+                    function(tx, error) {
+                        console.log("查询失败: " + error.message);
+                    }
+                );
+            });
+        });
+    }
+
     update() {
 
     }
