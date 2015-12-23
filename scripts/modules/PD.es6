@@ -19,42 +19,31 @@ class Word {
 	}
 }
 
-class CursorNode extends Word{
-	constructor(spelling, meaning, position, nextP) {
-		super(spelling, meaning);
-		this.position = position;
-		this.nextP = nextP;
-	}
-}
+class wordTree {
+    /**
+     * 从数据库导入数据，赋给value属性
+     * @param db 数据库对象
+     */
+    importDB(db) {
 
-export class CursorSpace {
-	constructor(n) {
-		//生成该游标空间时，自动初始化
-		this.createCursor(n);
-	}
-
-	createCursor(n) {
-		this.arr = [];
-		for (var i = 0; i < n; i++) {
-			var cursorNode = new CursorNode();
-			cursorNode.next = i + 1;
-			if(n - 1 == i) {
-				cursorNode.next = 0;
-			}
-            this.arr.push(cursorNode);
-		}
-	}
-
-	malloc() {
-        var p = this.arr[0].next;
-        this.arr[0].next = this.arr[p].next;
-        return p;
     }
 
-	free(p) {
-        this.arr[p].next = this.arr[0].next;
-        this.arr[0].next = p;
-	}
-}
+    /**
+     * 基本操作：增删查改
+     */
+    insert() {
 
-export {CursorSpace};
+    }
+
+    del() {
+
+    }
+
+    find() {
+
+    }
+
+    update() {
+
+    }
+}
