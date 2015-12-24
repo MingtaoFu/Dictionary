@@ -84,6 +84,9 @@
 	var wordTree = new PD.WordTree();
 	wordTree.importDB([word, word2]);
 	console.log(wordTree);
+	console.log(wordTree.find('ss'));
+	console.log(wordTree.find('sxs'));
+	console.log(wordTree.find('xs'));
 
 /***/ },
 /* 2 */
@@ -333,7 +336,17 @@
 	        value: function del() {}
 	    }, {
 	        key: 'find',
-	        value: function find() {}
+	        value: function find(spelling) {
+	            this.cursor = this._root;
+	            for (var i in spelling) {
+	                var index = spelling[i].charCodeAt() - 97;
+	                if (!this.cursor[index]) {
+	                    return null;
+	                }
+	                this.cursor = this.cursor[index];
+	            }
+	            return this.cursor.getWord();
+	        }
 	    }, {
 	        key: 'update',
 	        value: function update() {}

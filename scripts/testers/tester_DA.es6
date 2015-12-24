@@ -9,3 +9,6 @@ console.log(str)
 var wordTree = new PD.WordTree();
 wordTree.importDB([word, word2]);
 console.log(wordTree);
+console.log(wordTree.find('ss'));
+console.log(wordTree.find('sxs'));
+console.log(wordTree.find('xs'));

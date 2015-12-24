@@ -115,8 +115,16 @@ class WordTree {
 
     }
 
-    find() {
-
+    find(spelling) {
+        this.cursor = this._root;
+        for(let i in spelling) {
+            var index = spelling[i].charCodeAt() - 97;
+            if(!this.cursor[index]) {
+                return null;
+            }
+            this.cursor = this.cursor[index];
+        }
+        return this.cursor.getWord();
     }
 
     update() {
