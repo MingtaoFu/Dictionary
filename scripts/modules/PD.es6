@@ -2,19 +2,18 @@ import * as DA from './DA.es6';
 
 class Meaning {
     constructor(pos, meaning) {
-        POS(pos);
-        meaning(meaning);
-
+        this.setPOS(pos);
+        this.setMeaning(meaning);
     }
 
     /**
      * setters and getters
      */
-    set POS(pos) {
+    setPOS(pos) {
         this._POS = pos;
     }
 
-    set meaning(meaning) {
+    setMeaning(meaning) {
         this._meaning = meaning;
     }
 }
@@ -22,18 +21,21 @@ class Meaning {
 class Word {
 	constructor(spelling, meaning) {
         //字符串
-        spelling(spelling);
+        this.setSpelling(spelling)
         //数组
-        meaning(meaning);
+        this.setMeaning(meaning);
 	}
 
 	/**
 	* setters and getters
 	*/
-    set spelling(spelling) {
+    setSpelling(spelling) {
         this._spelling = spelling;
     }
-    set meaning(meaning) {
+    getSpelling() {
+        return this._spelling;
+    }
+    setMeaning(meaning) {
         this._meaning = meaning;
     }
 
@@ -46,15 +48,48 @@ class Word {
 	validateUnique() {
 
 	}
+
+    insert(db) {
+        db.find(this.getSpelling());
+        db.insert(this)
+    }
+}
+
+class TreeNode {
+    constructor() {
+        this._value = [];
+        this._word = null;
+    }
+
+    getValue() {
+        return this._value;
+    }
+    setWord(word) {
+        this._word = word;
+    }
 }
 
 class WordTree {
+    constructor() {
+        this._root = new TreeNode();
+    }
     /**
      * 从数据库导入数据，赋给value属性
      * @param value 数据库对象
      */
     importDB(value) {
-        value(value);
+        var cursor = this._root;
+        for(let i in value) {
+            let spelling = value[i].getSpelling();
+            for(let j in spelling) {
+                var index = spelling[j].charCodeAt() - 97;
+                if(!cursor[index]) {
+                    cursor[index] = new TreeNode();
+                }
+                cursor = cursor[index];
+                cursor.setWord(value[i]);
+            }
+        }
     }
 
     /**
@@ -80,9 +115,6 @@ class WordTree {
     /**
      * setters and getters
      */
-    set value(value) {
-        this._value = value;
-    }
 }
 
 export {Word, WordTree};

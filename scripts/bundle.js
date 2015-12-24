@@ -71,21 +71,18 @@
 
 	var DA = _interopRequireWildcard(_DA);
 
+	var _PD = __webpack_require__(3);
+
+	var PD = _interopRequireWildcard(_PD);
+
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-	//创建数据库
-	var dataBase = new DA.DB('x');
-	console.log(dataBase);
-
-	dataBase.find('xx', function (value) {
-	    console.log(value);
-	});
-
-	dataBase.insert('xx', function () {
-	    console.log(2);
-	});
-
-	dataBase.outputDB();
+	var word = new PD.Word('ss', 2);
+	var str = JSON.stringify(word);
+	console.log(str);
+	var wordTree = new PD.WordTree();
+	wordTree.importDB([word]);
+	console.log(wordTree);
 
 /***/ },
 /* 2 */
@@ -108,48 +105,13 @@
 	     * 否则新建
 	     */
 
-	    function DB(dbName) {
+	    function DB() {
 	        _classCallCheck(this, DB);
 
-	        var dataBase = openDatabase(dbName, "1.0", "word DB", 1024 * 1024, function () {});
-	        if (!dataBase) {
-	            alert("开启/创建数据库失败。");
-	        } else {
-	            this._real_DB_obj = dataBase;
-
-	            //Unique table
-	            dataBase.transaction(function (tx) {
-	                tx.executeSql("create table if not exists Word (spelling varchar(32) UNIQUE)", [], function (tx, result) {
-	                    console.log('创建Word表成功');
-	                }, function (tx, error) {
-	                    console.log('创建word表失败: ' + error.message);
-	                });
-	            });
-	            //POS table
-	            dataBase.transaction(function (tx) {
-	                tx.executeSql("create table if not exists POS " + "(id integer PRIMARY KEY AUTOINCREMENT, POS varchar(16), word varchar(32), " + "FOREIGN KEY (word) REFERENCES Word(spelling))", [], function (tx, result) {
-	                    console.log('创建POS表成功');
-	                }, function (tx, error) {
-	                    console.log('创建POS表失败: ' + error.message);
-	                });
-	            });
-	            //Meaning table
-	            dataBase.transaction(function (tx) {
-	                tx.executeSql("create table if not exists Meaning " + "(id integer PRIMARY KEY AUTOINCREMENT, meaning varchar(32), word varchar(32), POS varchar(16)," + " FOREIGN KEY (POS) REFERENCES POS(id))", [], function (tx, result) {
-	                    console.log('创建Meaning表成功');
-	                }, function (tx, error) {
-	                    console.log('创建Meaning表失败: ' + error.message);
-	                });
-	            });
-	            //Sentence table
-	            dataBase.transaction(function (tx) {
-	                tx.executeSql("create table if not exists Sentence " + "(id integer PRIMARY KEY AUTOINCREMENT, content varchar(256), meaning integer," + " FOREIGN KEY (meaning) REFERENCES Meaning(id))", [], function (tx, result) {
-	                    console.log('创建Sentence表成功');
-	                }, function (tx, error) {
-	                    console.log('创建Sentence表失败: ' + error.message);
-	                });
-	            });
+	        if (!localStorage.dicData) {
+	            localStorage.dicData = {};
 	        }
+	        this._dicData = localStorage.dicData;
 	    }
 
 	    /**
@@ -160,66 +122,25 @@
 	    _createClass(DB, [{
 	        key: "outputDB",
 	        value: function outputDB() {
-	            var list = [];
-	            this._real_DB_obj.transaction(function (tx) {
-	                tx.executeSql(
-	                /*
-	                "select Word.spelling, POS.POS, Meaning.meaning, Sentence.content from Word, POS, Meaning, Sentence " +
-	                "where POS.word=Word.spelling and Meaning.POS=POS.id and Sentence.content=Meaning.id",
-	                */
-	                "select distinct spelling from Word", [], function (tx, result) {
-	                    for (var i in result.rows) {
-	                        var wordObj = {};
-	                        list[result.rows[i].spelling] = wordObj;
-	                        tx.executeSql("select distinct POS from POS where word = ?", [result.rows[i].spelling], function () {});
-	                    }
-	                }, function (tx, error) {
-	                    console.log("导出失败: " + error.message);
-	                });
-	            });
+	            return this._dicData;
 	        }
 
 	        /**
 	         * 基本的数据库操作：增删查改
-	         * 由于数据一次性输出，所以没有查询
 	         */
 
 	    }, {
 	        key: "insert",
-	        value: function insert(word, succ, fail) {
-	            var fail = fail || function () {};
-	            var that = this;
-	            this.find(word, function (value) {
-	                if (value.length != 0) {
-	                    console.log("已经存在，插入失败");
-	                    fail();
-	                } else {
-	                    that._real_DB_obj.transaction(function (tx) {
-	                        tx.executeSql("insert into Word(spelling) values (?)", [word], function (tx, result) {
-	                            succ();
-	                        }, function (tx, error) {
-	                            console.log("查询失败: " + error.message);
-	                            fail();
-	                        });
-	                    });
-	                }
-	            }, function () {});
+	        value: function insert(word) {
+	            this._dicData[word.spelling()] = word;
 	        }
 	    }, {
 	        key: "del",
 	        value: function del() {}
 	    }, {
 	        key: "find",
-	        value: function find(word, succ, fail) {
-	            var fail = fail || function () {};
-	            this._real_DB_obj.transaction(function (tx) {
-	                tx.executeSql("select spelling from Word where spelling = ?", [word], function (tx, result) {
-	                    succ(result.rows);
-	                }, function (tx, error) {
-	                    console.log("查询失败: " + error.message);
-	                    fail();
-	                });
-	            });
+	        value: function find(word) {
+	            return this._dicData[word];
 	        }
 	    }, {
 	        key: "update",
@@ -256,8 +177,8 @@
 	    function Meaning(pos, meaning) {
 	        _classCallCheck(this, Meaning);
 
-	        POS(pos);
-	        meaning(meaning);
+	        this.setPOS(pos);
+	        this.setMeaning(meaning);
 	    }
 
 	    /**
@@ -265,13 +186,13 @@
 	     */
 
 	    _createClass(Meaning, [{
-	        key: 'POS',
-	        set: function set(pos) {
+	        key: 'setPOS',
+	        value: function setPOS(pos) {
 	            this._POS = pos;
 	        }
 	    }, {
-	        key: 'meaning',
-	        set: function set(meaning) {
+	        key: 'setMeaning',
+	        value: function setMeaning(meaning) {
 	            this._meaning = meaning;
 	        }
 	    }]);
@@ -284,9 +205,9 @@
 	        _classCallCheck(this, Word);
 
 	        //字符串
-	        spelling(spelling);
+	        this.setSpelling(spelling);
 	        //数组
-	        meaning(meaning);
+	        this.setMeaning(meaning);
 	    }
 
 	    /**
@@ -294,9 +215,25 @@
 	    */
 
 	    _createClass(Word, [{
-	        key: 'match',
+	        key: 'setSpelling',
+	        value: function setSpelling(spelling) {
+	            this._spelling = spelling;
+	        }
+	    }, {
+	        key: 'getSpelling',
+	        value: function getSpelling() {
+	            return this._spelling;
+	        }
+	    }, {
+	        key: 'setMeaning',
+	        value: function setMeaning(meaning) {
+	            this._meaning = meaning;
+	        }
 
 	        //搜索匹配，含部分匹配
+
+	    }, {
+	        key: 'match',
 	        value: function match(str) {}
 
 	        //验证是否已经存在了此词
@@ -305,34 +242,65 @@
 	        key: 'validateUnique',
 	        value: function validateUnique() {}
 	    }, {
-	        key: 'spelling',
-	        set: function set(spelling) {
-	            this._spelling = spelling;
-	        }
-	    }, {
-	        key: 'meaning',
-	        set: function set(meaning) {
-	            this._meaning = meaning;
+	        key: 'insert',
+	        value: function insert(db) {
+	            db.find(this.getSpelling());
+	            db.insert(this);
 	        }
 	    }]);
 
 	    return Word;
 	})();
 
+	var TreeNode = (function () {
+	    function TreeNode() {
+	        _classCallCheck(this, TreeNode);
+
+	        this._value = [];
+	        this._word = null;
+	    }
+
+	    _createClass(TreeNode, [{
+	        key: 'getValue',
+	        value: function getValue() {
+	            return this._value;
+	        }
+	    }, {
+	        key: 'setWord',
+	        value: function setWord(word) {
+	            this._word = word;
+	        }
+	    }]);
+
+	    return TreeNode;
+	})();
+
 	var WordTree = (function () {
 	    function WordTree() {
 	        _classCallCheck(this, WordTree);
+
+	        this._root = new TreeNode();
 	    }
+	    /**
+	     * 从数据库导入数据，赋给value属性
+	     * @param value 数据库对象
+	     */
 
 	    _createClass(WordTree, [{
 	        key: 'importDB',
-
-	        /**
-	         * 从数据库导入数据，赋给value属性
-	         * @param value 数据库对象
-	         */
 	        value: function importDB(value) {
-	            value(value);
+	            var cursor = this._root;
+	            for (var i in value) {
+	                var spelling = value[i].getSpelling();
+	                for (var j in spelling) {
+	                    var index = spelling[j].charCodeAt() - 97;
+	                    if (!cursor[index]) {
+	                        cursor[index] = new TreeNode();
+	                    }
+	                    cursor = cursor[index];
+	                    cursor.setWord(value[i]);
+	                }
+	            }
 	        }
 
 	        /**
@@ -359,11 +327,6 @@
 	         * setters and getters
 	         */
 
-	    }, {
-	        key: 'value',
-	        set: function set(value) {
-	            this._value = value;
-	        }
 	    }]);
 
 	    return WordTree;
