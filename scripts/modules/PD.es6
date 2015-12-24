@@ -84,14 +84,19 @@ class WordTree {
     importDB(value) {
         for(let i in value) {
             this.cursor = this._root;
-            this.insert(value[i]);
+            this._insert(value[i]);
         }
     }
 
     /**
      * 基本操作：增删查改
      */
-    insert(word) {
+    insert(word, db) {
+        this._insert(word);
+        db.insert(word);
+    }
+
+    _insert(word) {
         this.cursor = this._root;
         var spelling = word.getSpelling();
         for(let i in spelling) {
@@ -104,8 +109,6 @@ class WordTree {
                 this.cursor.setWord(word);
             }
         }
-
-        //还需要插入到本地
     }
 
     del() {

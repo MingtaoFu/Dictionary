@@ -133,7 +133,7 @@
 	    }, {
 	        key: "insert",
 	        value: function insert(word) {
-	            this._dicData[word.spelling()] = word;
+	            this._dicData[word.getSpelling()] = word;
 	        }
 	    }, {
 	        key: "del",
@@ -298,7 +298,7 @@
 	        value: function importDB(value) {
 	            for (var i in value) {
 	                this.cursor = this._root;
-	                this.insert(value[i]);
+	                this._insert(value[i]);
 	            }
 	        }
 
@@ -308,7 +308,13 @@
 
 	    }, {
 	        key: 'insert',
-	        value: function insert(word) {
+	        value: function insert(word, db) {
+	            this._insert(word);
+	            db.insert(word);
+	        }
+	    }, {
+	        key: '_insert',
+	        value: function _insert(word) {
 	            this.cursor = this._root;
 	            var spelling = word.getSpelling();
 	            for (var i in spelling) {
@@ -321,8 +327,6 @@
 	                    this.cursor.setWord(word);
 	                }
 	            }
-
-	            //还需要插入到本地
 	        }
 	    }, {
 	        key: 'del',

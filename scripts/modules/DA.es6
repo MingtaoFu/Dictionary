@@ -23,7 +23,7 @@ class DB {
      * 基本的数据库操作：增删查改
      */
     insert(word) {
-        this._dicData[word.spelling()] = word;
+        this._dicData[word.getSpelling()] = word;
     }
 
     del() {
