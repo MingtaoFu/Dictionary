@@ -46,15 +46,15 @@
 
 	'use strict';
 
-	__webpack_require__(9);
+	__webpack_require__(1);
 
-	var _PD = __webpack_require__(1);
+	var _PD = __webpack_require__(3);
 
 	var PD = _interopRequireWildcard(_PD);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-	__webpack_require__(2);
+	__webpack_require__(4);
 	/*
 	var Man = require('./modules/test.js');
 	var mingtao = new Man('tao');
@@ -67,6 +67,157 @@
 
 	'use strict';
 
+	var _DA = __webpack_require__(2);
+
+	var DA = _interopRequireWildcard(_DA);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	//创建数据库
+	var dataBase = new DA.DB();
+	console.log(dataBase);
+
+	dataBase.find('xx', function (value) {
+	    console.log(value);
+	});
+
+	dataBase.insert('xx', function () {
+	    console.log(2);
+	});
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var DB = (function () {
+	    /**
+	     * 初始化数据库
+	     * 如果数据库存在，返回该对象
+	     * 否则新建
+	     */
+
+	    function DB(dbName) {
+	        _classCallCheck(this, DB);
+
+	        var dataBase = openDatabase(dbName, "1.0", "word DB", 1024 * 1024, function () {});
+	        if (!dataBase) {
+	            alert("开启/创建数据库失败。");
+	        } else {
+	            this._real_DB_obj = dataBase;
+
+	            //Unique table
+	            dataBase.transaction(function (tx) {
+	                tx.executeSql("create table if not exists Word (spelling varchar(32) UNIQUE)", [], function (tx, result) {
+	                    console.log('创建Word表成功');
+	                }, function (tx, error) {
+	                    console.log('创建word表失败: ' + error.message);
+	                });
+	            });
+	            //POS table
+	            dataBase.transaction(function (tx) {
+	                tx.executeSql("create table if not exists POS " + "(POS varchar(16), word varchar(32), FOREIGN KEY (word) REFERENCES Word(spelling))", [], function (tx, result) {
+	                    console.log('创建POS表成功');
+	                }, function (tx, error) {
+	                    console.log('创建POS表失败: ' + error.message);
+	                });
+	            });
+	            //Meaning table
+	            dataBase.transaction(function (tx) {
+	                tx.executeSql("create table if not exists Meaning " + "(id integer PRIMARY KEY AUTOINCREMENT, meaning varchar(32), word varchar(32), POS varchar(16)," + " FOREIGN KEY (word) REFERENCES Word(spelling))"
+	                /*+ " FOREIGN KEY (POS) REFERENCES POS(POS)) "*/
+	                , [], function (tx, result) {
+	                    console.log('创建Meaning表成功');
+	                }, function (tx, error) {
+	                    console.log('创建Meaning表失败: ' + error.message);
+	                });
+	            });
+	            //Sentence table
+	            dataBase.transaction(function (tx) {
+	                tx.executeSql("create table if not exists Sentence " + "(id integer PRIMARY KEY AUTOINCREMENT, content varchar(256), meaning integer," + " FOREIGN KEY (meaning) REFERENCES Meaning(id))", [], function (tx, result) {
+	                    console.log('创建Sentence表成功');
+	                }, function (tx, error) {
+	                    console.log('创建Sentence表失败: ' + error.message);
+	                });
+	            });
+	        }
+	    }
+
+	    /**
+	     * 返回整个数据库的数据
+	     * 它们将直接存入内存，以便快速搜索
+	     */
+
+	    _createClass(DB, [{
+	        key: "outputDB",
+	        value: function outputDB() {}
+
+	        /**
+	         * 基本的数据库操作：增删查改
+	         * 由于数据一次性输出，所以没有查询
+	         */
+
+	    }, {
+	        key: "insert",
+	        value: function insert(word, succ, fail) {
+	            var fail = fail || function () {};
+	            this.find(word, function (value) {
+	                if (value.length != 0) {
+	                    console.log("已经存在，插入失败");
+	                    fail();
+	                } else {
+	                    this._real_DB_obj.transaction(function (tx) {
+	                        tx.executeSql("insert into Word(spelling) values (?)", [word], function (tx, result) {
+	                            succ();
+	                        }, function (tx, error) {
+	                            console.log("查询失败: " + error.message);
+	                            fail();
+	                        });
+	                    });
+	                }
+	            }, function () {});
+	        }
+	    }, {
+	        key: "del",
+	        value: function del() {}
+	    }, {
+	        key: "find",
+	        value: function find(word, succ, fail) {
+	            var fail = fail || function () {};
+	            this._real_DB_obj.transaction(function (tx) {
+	                tx.executeSql("select spelling from Word where spelling = ?", [word], function (tx, result) {
+	                    succ(result.rows);
+	                }, function (tx, error) {
+	                    console.log("查询失败: " + error.message);
+	                    fail();
+	                });
+	            });
+	        }
+	    }, {
+	        key: "update",
+	        value: function update() {}
+	    }]);
+
+	    return DB;
+	})();
+
+	exports.DB = DB;
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 	Object.defineProperty(exports, "__esModule", {
@@ -74,7 +225,7 @@
 	});
 	exports.WordTree = exports.Word = undefined;
 
-	var _DA = __webpack_require__(8);
+	var _DA = __webpack_require__(2);
 
 	var DA = _interopRequireWildcard(_DA);
 
@@ -203,16 +354,16 @@
 	exports.WordTree = WordTree;
 
 /***/ },
-/* 2 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(3);
+	var content = __webpack_require__(5);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(5)(content, {});
+	var update = __webpack_require__(7)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -229,10 +380,10 @@
 	}
 
 /***/ },
-/* 3 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(4)();
+	exports = module.exports = __webpack_require__(6)();
 	// imports
 
 
@@ -243,7 +394,7 @@
 
 
 /***/ },
-/* 4 */
+/* 6 */
 /***/ function(module, exports) {
 
 	/*
@@ -299,7 +450,7 @@
 
 
 /***/ },
-/* 5 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -551,143 +702,6 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
-
-/***/ },
-/* 6 */,
-/* 7 */,
-/* 8 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var DB = (function () {
-	    /**
-	     * 初始化数据库
-	     * 如果数据库存在，返回该对象
-	     * 否则新建
-	     */
-
-	    function DB(dbName) {
-	        _classCallCheck(this, DB);
-
-	        var dataBase = openDatabase(dbName, "1.0", "word DB", 1024 * 1024, function () {});
-	        if (!dataBase) {
-	            alert("开启/创建数据库失败。");
-	        } else {
-	            this._real_DB_obj = dataBase;
-
-	            //Unique table
-	            dataBase.transaction(function (tx) {
-	                tx.executeSql("create table if not exists Word (spelling varchar(32) UNIQUE)", [], function (tx, result) {
-	                    console.log('创建Word表成功');
-	                }, function (tx, error) {
-	                    console.log('创建word表失败: ' + error.message);
-	                });
-	            });
-	            //POS table
-	            dataBase.transaction(function (tx) {
-	                tx.executeSql("create table if not exists POS " + "(POS varchar(16), word varchar(32), FOREIGN KEY (word) REFERENCES Word(spelling))", [], function (tx, result) {
-	                    console.log('创建POS表成功');
-	                }, function (tx, error) {
-	                    console.log('创建POS表失败: ' + error.message);
-	                });
-	            });
-	            //Meaning table
-	            dataBase.transaction(function (tx) {
-	                tx.executeSql("create table if not exists Meaning " + "(id integer PRIMARY KEY AUTOINCREMENT, meaning varchar(32), word varchar(32), POS varchar(16)," + " FOREIGN KEY (word) REFERENCES Word(spelling))"
-	                /*+ " FOREIGN KEY (POS) REFERENCES POS(POS)) "*/
-	                , [], function (tx, result) {
-	                    console.log('创建Meaning表成功');
-	                }, function (tx, error) {
-	                    console.log('创建Meaning表失败: ' + error.message);
-	                });
-	            });
-	            //Sentence table
-	            dataBase.transaction(function (tx) {
-	                tx.executeSql("create table if not exists Sentence " + "(id integer PRIMARY KEY AUTOINCREMENT, content varchar(256), meaning integer," + " FOREIGN KEY (meaning) REFERENCES Meaning(id))", [], function (tx, result) {
-	                    console.log('创建Sentence表成功');
-	                }, function (tx, error) {
-	                    console.log('创建Sentence表失败: ' + error.message);
-	                });
-	            });
-	        }
-	    }
-
-	    /**
-	     * 返回整个数据库的数据
-	     * 它们将直接存入内存，以便快速搜索
-	     */
-
-	    _createClass(DB, [{
-	        key: "outputDB",
-	        value: function outputDB() {}
-
-	        /**
-	         * 基本的数据库操作：增删查改
-	         * 由于数据一次性输出，所以没有查询
-	         */
-
-	    }, {
-	        key: "insert",
-	        value: function insert(word) {
-	            this.find(word).then(function (value) {});
-	        }
-	    }, {
-	        key: "del",
-	        value: function del() {}
-	    }, {
-	        key: "find",
-	        value: function find(word) {
-	            var that = this;
-	            return new Promise(function (resolve, reject) {
-	                that._real_DB_obj.transaction(function (tx) {
-	                    tx.executeSql("select spelling from Word where spelling = ?", [word], function (tx, result) {
-	                        resolve(result.rows);
-	                    }, function (tx, error) {
-	                        console.log("查询失败: " + error.message);
-	                    });
-	                });
-	            });
-	        }
-	    }, {
-	        key: "update",
-	        value: function update() {}
-	    }]);
-
-	    return DB;
-	})();
-
-	exports.DB = DB;
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _DA = __webpack_require__(8);
-
-	var DA = _interopRequireWildcard(_DA);
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-	//创建数据库
-	var dataBase = new DA.DB();
-	console.log(dataBase);
-
-	dataBase.insert('xx');
-	var result = dataBase.find('xx');
-	result.then(function (value) {
-	    console.log(value);
-	});
 
 /***/ }
 /******/ ]);

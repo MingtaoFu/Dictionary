@@ -72,31 +72,54 @@ class DB {
      * 基本的数据库操作：增删查改
      * 由于数据一次性输出，所以没有查询
      */
-    insert(word) {
-        this.find(word).then(function(value) {
+    insert(word, succ, fail) {
+        var fail = fail || function() {};
+        this.find(
+            word,
+            function(value) {
+                if(value.length != 0) {
+                    console.log("已经存在，插入失败");
+                    fail();
+                } else {
+                    this._real_DB_obj.transaction( function(tx) {
+                        tx.executeSql(
+                            "insert into Word(spelling) values (?)",
+                            [word],
+                            function(tx, result) {
+                                succ();
+                            },
+                            function(tx, error) {
+                                console.log("查询失败: " + error.message);
+                                fail();
+                            }
+                        );
+                    });
+                }
+            },
+            function() {
 
-        });
+            }
+        );
     }
 
     del() {
 
     }
 
-    find(word) {
-        var that = this;
-        return new Promise(function(resolve, reject) {
-            that._real_DB_obj.transaction( function(tx) {
-                tx.executeSql(
-                    "select spelling from Word where spelling = ?",
-                    [word],
-                    function(tx, result) {
-                        resolve(result.rows);
-                    },
-                    function(tx, error) {
-                        console.log("查询失败: " + error.message);
-                    }
-                );
-            });
+    find(word, succ, fail) {
+        var fail = fail || function() {};
+        this._real_DB_obj.transaction( function(tx) {
+            tx.executeSql(
+                "select spelling from Word where spelling = ?",
+                [word],
+                function(tx, result) {
+                    succ(result.rows);
+                },
+                function(tx, error) {
+                    console.log("查询失败: " + error.message);
+                    fail();
+                }
+            );
         });
     }
 

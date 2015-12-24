@@ -4,8 +4,10 @@ import * as DA from '../modules/DA.es6';
 var dataBase = new DA.DB();
 console.log(dataBase);
 
-dataBase.insert('xx');
-var result = dataBase.find('xx');
-result.then(function(value){
+dataBase.find('xx',function(value) {
     console.log(value);
+});
+
+dataBase.insert('xx',function() {
+    console.log(2);
 });
