@@ -25,7 +25,8 @@ class DB {
             dataBase.transaction( function(tx) {
                 tx.executeSql(
                     "create table if not exists POS " +
-                    "(POS varchar(16), word varchar(32), FOREIGN KEY (word) REFERENCES Word(spelling))",
+                    "(id integer PRIMARY KEY AUTOINCREMENT, POS varchar(16), word varchar(32), " +
+                    "FOREIGN KEY (word) REFERENCES Word(spelling))",
                     [],
                     function(tx,result){ console.log('创建POS表成功'); },
                     function(tx, error){ console.log('创建POS表失败: ' + error.message);
@@ -37,8 +38,7 @@ class DB {
                 tx.executeSql(
                     "create table if not exists Meaning " +
                     "(id integer PRIMARY KEY AUTOINCREMENT, meaning varchar(32), word varchar(32), POS varchar(16)," +
-                    " FOREIGN KEY (word) REFERENCES Word(spelling))"
-                    /*+ " FOREIGN KEY (POS) REFERENCES POS(POS)) "*/,
+                    " FOREIGN KEY (POS) REFERENCES POS(id))",
                     [],
                     function(tx,result){ console.log('创建Meaning表成功'); },
                     function(tx, error){ console.log('创建Meaning表失败: ' + error.message);
@@ -65,6 +65,32 @@ class DB {
      * 它们将直接存入内存，以便快速搜索
      */
     outputDB() {
+        var list = [];
+        this._real_DB_obj.transaction( function(tx) {
+            tx.executeSql(
+                /*
+                "select Word.spelling, POS.POS, Meaning.meaning, Sentence.content from Word, POS, Meaning, Sentence " +
+                "where POS.word=Word.spelling and Meaning.POS=POS.id and Sentence.content=Meaning.id",
+                */
+                "select distinct spelling from Word",
+                [],
+                function(tx, result) {
+                    for(let i in result.rows) {
+                        let wordObj = {};
+                        list[result.rows[i].spelling] = wordObj;
+                        tx.executeSql(
+                            "select distinct POS from POS where word = ?",
+                            [result.rows[i].spelling],
+                            function() {
+                            }
+                        );
+                    }
+                },
+                function(tx, error) {
+                    console.log("导出失败: " + error.message);
+                }
+            )
+        })
 
     }
 
@@ -74,6 +100,7 @@ class DB {
      */
     insert(word, succ, fail) {
         var fail = fail || function() {};
+        var that = this;
         this.find(
             word,
             function(value) {
@@ -81,7 +108,7 @@ class DB {
                     console.log("已经存在，插入失败");
                     fail();
                 } else {
-                    this._real_DB_obj.transaction( function(tx) {
+                    that._real_DB_obj.transaction( function(tx) {
                         tx.executeSql(
                             "insert into Word(spelling) values (?)",
                             [word],

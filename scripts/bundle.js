@@ -74,7 +74,7 @@
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	//创建数据库
-	var dataBase = new DA.DB();
+	var dataBase = new DA.DB('x');
 	console.log(dataBase);
 
 	dataBase.find('xx', function (value) {
@@ -84,6 +84,8 @@
 	dataBase.insert('xx', function () {
 	    console.log(2);
 	});
+
+	dataBase.outputDB();
 
 /***/ },
 /* 2 */
@@ -125,7 +127,7 @@
 	            });
 	            //POS table
 	            dataBase.transaction(function (tx) {
-	                tx.executeSql("create table if not exists POS " + "(POS varchar(16), word varchar(32), FOREIGN KEY (word) REFERENCES Word(spelling))", [], function (tx, result) {
+	                tx.executeSql("create table if not exists POS " + "(id integer PRIMARY KEY AUTOINCREMENT, POS varchar(16), word varchar(32), " + "FOREIGN KEY (word) REFERENCES Word(spelling))", [], function (tx, result) {
 	                    console.log('创建POS表成功');
 	                }, function (tx, error) {
 	                    console.log('创建POS表失败: ' + error.message);
@@ -133,9 +135,7 @@
 	            });
 	            //Meaning table
 	            dataBase.transaction(function (tx) {
-	                tx.executeSql("create table if not exists Meaning " + "(id integer PRIMARY KEY AUTOINCREMENT, meaning varchar(32), word varchar(32), POS varchar(16)," + " FOREIGN KEY (word) REFERENCES Word(spelling))"
-	                /*+ " FOREIGN KEY (POS) REFERENCES POS(POS)) "*/
-	                , [], function (tx, result) {
+	                tx.executeSql("create table if not exists Meaning " + "(id integer PRIMARY KEY AUTOINCREMENT, meaning varchar(32), word varchar(32), POS varchar(16)," + " FOREIGN KEY (POS) REFERENCES POS(id))", [], function (tx, result) {
 	                    console.log('创建Meaning表成功');
 	                }, function (tx, error) {
 	                    console.log('创建Meaning表失败: ' + error.message);
@@ -159,7 +159,25 @@
 
 	    _createClass(DB, [{
 	        key: "outputDB",
-	        value: function outputDB() {}
+	        value: function outputDB() {
+	            var list = [];
+	            this._real_DB_obj.transaction(function (tx) {
+	                tx.executeSql(
+	                /*
+	                "select Word.spelling, POS.POS, Meaning.meaning, Sentence.content from Word, POS, Meaning, Sentence " +
+	                "where POS.word=Word.spelling and Meaning.POS=POS.id and Sentence.content=Meaning.id",
+	                */
+	                "select distinct spelling from Word", [], function (tx, result) {
+	                    for (var i in result.rows) {
+	                        var wordObj = {};
+	                        list[result.rows[i].spelling] = wordObj;
+	                        tx.executeSql("select distinct POS from POS where word = ?", [result.rows[i].spelling], function () {});
+	                    }
+	                }, function (tx, error) {
+	                    console.log("导出失败: " + error.message);
+	                });
+	            });
+	        }
 
 	        /**
 	         * 基本的数据库操作：增删查改
@@ -170,12 +188,13 @@
 	        key: "insert",
 	        value: function insert(word, succ, fail) {
 	            var fail = fail || function () {};
+	            var that = this;
 	            this.find(word, function (value) {
 	                if (value.length != 0) {
 	                    console.log("已经存在，插入失败");
 	                    fail();
 	                } else {
-	                    this._real_DB_obj.transaction(function (tx) {
+	                    that._real_DB_obj.transaction(function (tx) {
 	                        tx.executeSql("insert into Word(spelling) values (?)", [word], function (tx, result) {
 	                            succ();
 	                        }, function (tx, error) {
