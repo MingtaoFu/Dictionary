@@ -5,7 +5,7 @@ class DB {
      * 否则新建
      */
     constructor(dbName) {
-        var dataBase = openDatabase(dbName, "1.0", "word DB", 1024 * 1024, function() {});
+        var dataBase = openDatabase(dbName, "1", "word DB", 1024 * 1024, function() {});
         if (!dataBase) {
             alert("开启/创建数据库失败。");
         } else {
