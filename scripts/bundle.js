@@ -78,10 +78,11 @@
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	var word = new PD.Word('ss', 2);
+	var word2 = new PD.Word('sxs', 2);
 	var str = JSON.stringify(word);
 	console.log(str);
 	var wordTree = new PD.WordTree();
-	wordTree.importDB([word]);
+	wordTree.importDB([word, word2]);
 	console.log(wordTree);
 
 /***/ },
@@ -270,6 +271,11 @@
 	        value: function setWord(word) {
 	            this._word = word;
 	        }
+	    }, {
+	        key: 'getWord',
+	        value: function getWord() {
+	            return this._word;
+	        }
 	    }]);
 
 	    return TreeNode;
@@ -280,6 +286,7 @@
 	        _classCallCheck(this, WordTree);
 
 	        this._root = new TreeNode();
+	        this.cursor = this._root;
 	    }
 	    /**
 	     * 从数据库导入数据，赋给value属性
@@ -289,17 +296,9 @@
 	    _createClass(WordTree, [{
 	        key: 'importDB',
 	        value: function importDB(value) {
-	            var cursor = this._root;
 	            for (var i in value) {
-	                var spelling = value[i].getSpelling();
-	                for (var j in spelling) {
-	                    var index = spelling[j].charCodeAt() - 97;
-	                    if (!cursor[index]) {
-	                        cursor[index] = new TreeNode();
-	                    }
-	                    cursor = cursor[index];
-	                    cursor.setWord(value[i]);
-	                }
+	                this.cursor = this._root;
+	                this.insert(value[i]);
 	            }
 	        }
 
@@ -309,9 +308,21 @@
 
 	    }, {
 	        key: 'insert',
-	        value: function insert(db) {
+	        value: function insert(word) {
+	            this.cursor = this._root;
+	            var spelling = word.getSpelling();
+	            for (var i in spelling) {
+	                var index = spelling[i].charCodeAt() - 97;
+	                if (!this.cursor[index]) {
+	                    this.cursor[index] = new TreeNode();
+	                }
+	                this.cursor = this.cursor[index];
+	                if (!this.cursor.getWord()) {
+	                    this.cursor.setWord(word);
+	                }
+	            }
 
-	            db.insert();
+	            //还需要插入到本地
 	        }
 	    }, {
 	        key: 'del',

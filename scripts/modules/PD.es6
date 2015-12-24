@@ -67,37 +67,45 @@ class TreeNode {
     setWord(word) {
         this._word = word;
     }
+    getWord() {
+        return this._word;
+    }
 }
 
 class WordTree {
     constructor() {
         this._root = new TreeNode();
+        this.cursor = this._root;
     }
     /**
      * 从数据库导入数据，赋给value属性
      * @param value 数据库对象
      */
     importDB(value) {
-        var cursor = this._root;
         for(let i in value) {
-            let spelling = value[i].getSpelling();
-            for(let j in spelling) {
-                var index = spelling[j].charCodeAt() - 97;
-                if(!cursor[index]) {
-                    cursor[index] = new TreeNode();
-                }
-                cursor = cursor[index];
-                cursor.setWord(value[i]);
-            }
+            this.cursor = this._root;
+            this.insert(value[i]);
         }
     }
 
     /**
      * 基本操作：增删查改
      */
-    insert(db) {
+    insert(word) {
+        this.cursor = this._root;
+        var spelling = word.getSpelling();
+        for(let i in spelling) {
+            var index = spelling[i].charCodeAt() - 97;
+            if(!this.cursor[index]) {
+                this.cursor[index] = new TreeNode();
+            }
+            this.cursor = this.cursor[index];
+            if(!this.cursor.getWord()) {
+                this.cursor.setWord(word);
+            }
+        }
 
-        db.insert();
+        //还需要插入到本地
     }
 
     del() {
