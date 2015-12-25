@@ -77,16 +77,18 @@
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-	var word = new PD.Word('ss', 2);
+	var word = new PD.Word('a', 2);
 	var word2 = new PD.Word('sxs', 2);
+	var word3 = new PD.Word('absolute', 2);
+	var word4 = new PD.Word('ahead', 2);
+	var word5 = new PD.Word('able', 2);
 	var str = JSON.stringify(word);
 	console.log(str);
 	var wordTree = new PD.WordTree();
-	wordTree.importDB([word, word2]);
+	wordTree.importDB([word, word2, word3, word4, word5]);
 	console.log(wordTree);
-	console.log(wordTree.find('ss'));
+	console.log(wordTree.find('a'));
 	console.log(wordTree.find('sxs'));
-	console.log(wordTree.find('xs'));
 
 /***/ },
 /* 2 */
@@ -279,6 +281,24 @@
 	        value: function getWord() {
 	            return this._word;
 	        }
+
+	        //递归遍历
+
+	    }, {
+	        key: 'recursionErgodic',
+	        value: function recursionErgodic() {
+	            var resultArr = [];
+	            if (this._word) {
+	                resultArr.push(this._word);
+	            }
+	            for (var i in this._value) {
+	                var nextArr = this._value[i].recursionErgodic();
+	                for (var j in nextArr) {
+	                    resultArr.push(nextArr[j]);
+	                }
+	            }
+	            return resultArr;
+	        }
 	    }]);
 
 	    return TreeNode;
@@ -322,10 +342,10 @@
 	            var spelling = word.getSpelling();
 	            for (var i in spelling) {
 	                var index = spelling[i].charCodeAt() - 97;
-	                if (!this.cursor[index]) {
-	                    this.cursor[index] = new TreeNode();
+	                if (!this.cursor.getValue()[index]) {
+	                    this.cursor.getValue()[index] = new TreeNode();
 	                }
-	                this.cursor = this.cursor[index];
+	                this.cursor = this.cursor.getValue()[index];
 	                if (!this.cursor.getWord()) {
 	                    this.cursor.setWord(word);
 	                }
@@ -340,12 +360,12 @@
 	            this.cursor = this._root;
 	            for (var i in spelling) {
 	                var index = spelling[i].charCodeAt() - 97;
-	                if (!this.cursor[index]) {
+	                if (!this.cursor.getValue()[index]) {
 	                    return null;
 	                }
-	                this.cursor = this.cursor[index];
+	                this.cursor = this.cursor.getValue()[index];
 	            }
-	            return this.cursor.getWord();
+	            return this.cursor.recursionErgodic();
 	        }
 	    }, {
 	        key: 'update',

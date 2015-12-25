@@ -70,6 +70,21 @@ class TreeNode {
     getWord() {
         return this._word;
     }
+
+    //递归遍历
+    recursionErgodic() {
+        var resultArr = [];
+        if(this._word) {
+            resultArr.push(this._word);
+        }
+        for (let i in this._value) {
+            var nextArr = this._value[i].recursionErgodic();
+            for (let j in nextArr) {
+                 resultArr.push(nextArr[j]);
+            }
+        }
+        return resultArr;
+    }
 }
 
 class WordTree {
@@ -101,10 +116,10 @@ class WordTree {
         var spelling = word.getSpelling();
         for(let i in spelling) {
             var index = spelling[i].charCodeAt() - 97;
-            if(!this.cursor[index]) {
-                this.cursor[index] = new TreeNode();
+            if(!this.cursor.getValue()[index]) {
+                this.cursor.getValue()[index] = new TreeNode();
             }
-            this.cursor = this.cursor[index];
+            this.cursor = this.cursor.getValue()[index];
             if(!this.cursor.getWord()) {
                 this.cursor.setWord(word);
             }
@@ -119,12 +134,12 @@ class WordTree {
         this.cursor = this._root;
         for(let i in spelling) {
             var index = spelling[i].charCodeAt() - 97;
-            if(!this.cursor[index]) {
+            if(!this.cursor.getValue()[index]) {
                 return null;
             }
-            this.cursor = this.cursor[index];
+            this.cursor = this.cursor.getValue()[index];
         }
-        return this.cursor.getWord();
+        return this.cursor.recursionErgodic();
     }
 
     update() {
