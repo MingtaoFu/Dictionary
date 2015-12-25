@@ -14,3 +14,4 @@ wordTree.importDB([word, word2, word3, word4, word5]);
 console.log(wordTree);
 console.log(wordTree.find('a'));
 console.log(wordTree.find('sxs'));
+console.log(wordTree.find('ab'));

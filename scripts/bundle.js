@@ -89,6 +89,7 @@
 	console.log(wordTree);
 	console.log(wordTree.find('a'));
 	console.log(wordTree.find('sxs'));
+	console.log(wordTree.find('ab'));
 
 /***/ },
 /* 2 */
@@ -346,9 +347,9 @@
 	                    this.cursor.getValue()[index] = new TreeNode();
 	                }
 	                this.cursor = this.cursor.getValue()[index];
-	                if (!this.cursor.getWord()) {
-	                    this.cursor.setWord(word);
-	                }
+	            }
+	            if (!this.cursor.getWord()) {
+	                this.cursor.setWord(word);
 	            }
 	        }
 	    }, {

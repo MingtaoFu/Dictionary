@@ -120,10 +120,11 @@ class WordTree {
                 this.cursor.getValue()[index] = new TreeNode();
             }
             this.cursor = this.cursor.getValue()[index];
-            if(!this.cursor.getWord()) {
+
+        }
+        if(!this.cursor.getWord()) {
                 this.cursor.setWord(word);
             }
-        }
     }
 
     del() {
