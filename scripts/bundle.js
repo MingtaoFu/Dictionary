@@ -82,14 +82,19 @@
 	var word3 = new PD.Word('absolute', 2);
 	var word4 = new PD.Word('ahead', 2);
 	var word5 = new PD.Word('able', 2);
+	var wordaaa = new PD.Word('a', 2);
 	var str = JSON.stringify(word);
 	console.log(str);
 	var wordTree = new PD.WordTree();
-	wordTree.importDB([word, word2, word3, word4, word5]);
+	var db = new DA.DB();
+	wordTree.importDB(db.outputDB());
 	console.log(wordTree);
 	console.log(wordTree.find('a'));
 	console.log(wordTree.find('sxs'));
 	console.log(wordTree.find('ab'));
+
+	wordTree.insert(wordaaa, db);
+	console.log(wordTree.find('a'));
 
 /***/ },
 /* 2 */
@@ -116,9 +121,9 @@
 	        _classCallCheck(this, DB);
 
 	        if (!localStorage.dicData) {
-	            localStorage.dicData = {};
+	            localStorage.dicData = "[]";
 	        }
-	        this._dicData = localStorage.dicData;
+	        this._dicData = JSON.parse(localStorage.dicData);
 	    }
 
 	    /**
@@ -139,7 +144,8 @@
 	    }, {
 	        key: "insert",
 	        value: function insert(word) {
-	            this._dicData[word.getSpelling()] = word;
+	            this._dicData.push(word);
+	            this.saveToLocal();
 	        }
 	    }, {
 	        key: "del",
@@ -152,6 +158,11 @@
 	    }, {
 	        key: "update",
 	        value: function update() {}
+	    }, {
+	        key: "saveToLocal",
+	        value: function saveToLocal() {
+	            localStorage.dicData = JSON.stringify(this._dicData);
+	        }
 	    }]);
 
 	    return DB;
@@ -235,6 +246,11 @@
 	        key: 'setMeaning',
 	        value: function setMeaning(meaning) {
 	            this._meaning = meaning;
+	        }
+	    }, {
+	        key: 'getMeaning',
+	        value: function getMeaning() {
+	            return this._meaning;
 	        }
 
 	        //搜索匹配，含部分匹配
@@ -322,16 +338,15 @@
 	        value: function importDB(value) {
 	            for (var i in value) {
 	                this.cursor = this._root;
-	                this._insert(value[i]);
+	                this._insert(WordTree.objToWord(value[i]));
 	            }
 	        }
+	    }, {
+	        key: 'insert',
 
 	        /**
 	         * 基本操作：增删查改
 	         */
-
-	    }, {
-	        key: 'insert',
 	        value: function insert(word, db) {
 	            this._insert(word);
 	            db.insert(word);
@@ -376,6 +391,11 @@
 	         * setters and getters
 	         */
 
+	    }], [{
+	        key: 'objToWord',
+	        value: function objToWord(obj) {
+	            return new Word(obj._spelling, obj._meaning);
+	        }
 	    }]);
 
 	    return WordTree;

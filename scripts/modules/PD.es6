@@ -21,7 +21,7 @@ class Meaning {
 class Word {
 	constructor(spelling, meaning) {
         //字符串
-        this.setSpelling(spelling)
+        this.setSpelling(spelling);
         //数组
         this.setMeaning(meaning);
 	}
@@ -37,6 +37,9 @@ class Word {
     }
     setMeaning(meaning) {
         this._meaning = meaning;
+    }
+    getMeaning() {
+        return this._meaning;
     }
 
 	//搜索匹配，含部分匹配
@@ -99,8 +102,12 @@ class WordTree {
     importDB(value) {
         for(let i in value) {
             this.cursor = this._root;
-            this._insert(value[i]);
+            this._insert(WordTree.objToWord(value[i]));
         }
+    }
+
+    static objToWord(obj) {
+        return new Word(obj._spelling, obj._meaning);
     }
 
     /**
@@ -120,11 +127,10 @@ class WordTree {
                 this.cursor.getValue()[index] = new TreeNode();
             }
             this.cursor = this.cursor.getValue()[index];
-
         }
         if(!this.cursor.getWord()) {
-                this.cursor.setWord(word);
-            }
+            this.cursor.setWord(word);
+        }
     }
 
     del() {

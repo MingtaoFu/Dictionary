@@ -6,9 +6,9 @@ class DB {
      */
     constructor() {
         if(!localStorage.dicData) {
-            localStorage.dicData = {};
+            localStorage.dicData = "[]";
         }
-        this._dicData = localStorage.dicData;
+        this._dicData = JSON.parse(localStorage.dicData);
     }
 
     /**
@@ -23,7 +23,8 @@ class DB {
      * 基本的数据库操作：增删查改
      */
     insert(word) {
-        this._dicData[word.getSpelling()] = word;
+        this._dicData.push(word);
+        this.saveToLocal();
     }
 
     del() {
@@ -36,6 +37,10 @@ class DB {
 
     update() {
 
+    }
+
+    saveToLocal() {
+        localStorage.dicData = JSON.stringify(this._dicData);
     }
 }
 
