@@ -93,7 +93,9 @@
 	console.log(wordTree.find('sxs'));
 	console.log(wordTree.find('ab'));
 
-	wordTree.insert(wordaaa, db);
+	wordTree.insert(word4, db);
+	//wordTree.insert(word5, db);
+	wordTree.del('able', db);
 	console.log(wordTree.find('a'));
 
 /***/ },
@@ -149,11 +151,15 @@
 	        }
 	    }, {
 	        key: "del",
-	        value: function del() {}
-	    }, {
-	        key: "find",
-	        value: function find(word) {
-	            return this._dicData[word];
+	        value: function del(spelling) {
+	            for (var i in this._dicData) {
+	                if (spelling == this._dicData[i]._spelling) {
+	                    this._dicData.splice(i, 1);
+	                    this.saveToLocal();
+	                    return;
+	                }
+	            }
+	            console.log('DA 找不到这个词.');
 	        }
 	    }, {
 	        key: "update",
@@ -347,13 +353,8 @@
 	        /**
 	         * 基本操作：增删查改
 	         */
+
 	        value: function insert(word, db) {
-	            this._insert(word);
-	            db.insert(word);
-	        }
-	    }, {
-	        key: '_insert',
-	        value: function _insert(word) {
 	            this.cursor = this._root;
 	            var spelling = word.getSpelling();
 	            for (var i in spelling) {
@@ -365,11 +366,38 @@
 	            }
 	            if (!this.cursor.getWord()) {
 	                this.cursor.setWord(word);
+	                db.insert(word);
 	            }
 	        }
 	    }, {
 	        key: 'del',
-	        value: function del() {}
+	        value: function del(spelling, db) {
+	            this._del(spelling);
+	            db.del(spelling);
+	        }
+	    }, {
+	        key: '_del',
+	        value: function _del(spelling) {
+	            //参考查找的写法
+	            var cursor2;
+	            this.cursor = this._root;
+	            for (var i in spelling) {
+	                cursor2 = this.cursor;
+	                var index = spelling[i].charCodeAt() - 97;
+	                if (!this.cursor.getValue()[index]) {
+	                    return null;
+	                }
+	                this.cursor = this.cursor.getValue()[index];
+	            }
+	            if (this.cursor.getValue()) {
+	                this.cursor.setWord(null);
+	            } else {
+	                cursor2.getValue()[index] = null;
+	                if (cursor2.getValue().length == 0) {
+	                    cursor2.setValue(null);
+	                }
+	            }
+	        }
 	    }, {
 	        key: 'find',
 	        value: function find(spelling) {

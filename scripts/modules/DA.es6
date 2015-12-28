@@ -27,12 +27,15 @@ class DB {
         this.saveToLocal();
     }
 
-    del() {
-
-    }
-
-    find(word) {
-        return this._dicData[word];
+    del(spelling) {
+        for (let i in this._dicData) {
+            if(spelling == this._dicData[i]._spelling) {
+                this._dicData.splice(i, 1);
+                this.saveToLocal();
+                return;
+            }
+        }
+        console.log('DA 找不到这个词.')
     }
 
     update() {

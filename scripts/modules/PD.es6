@@ -113,12 +113,8 @@ class WordTree {
     /**
      * 基本操作：增删查改
      */
-    insert(word, db) {
-        this._insert(word);
-        db.insert(word);
-    }
 
-    _insert(word) {
+    insert(word, db) {
         this.cursor = this._root;
         var spelling = word.getSpelling();
         for(let i in spelling) {
@@ -130,11 +126,35 @@ class WordTree {
         }
         if(!this.cursor.getWord()) {
             this.cursor.setWord(word);
+            db.insert(word);
         }
     }
 
-    del() {
+    del(spelling, db) {
+        this._del(spelling);
+        db.del(spelling);
+    }
 
+    _del(spelling) {
+        //参考查找的写法
+        var cursor2;
+        this.cursor = this._root;
+        for(let i in spelling) {
+            cursor2 = this.cursor;
+            var index = spelling[i].charCodeAt() - 97;
+            if(!this.cursor.getValue()[index]) {
+                return null;
+            }
+            this.cursor = this.cursor.getValue()[index];
+        }
+        if(this.cursor.getValue()) {
+            this.cursor.setWord(null);
+        } else {
+            cursor2.getValue()[index] = null;
+            if(cursor2.getValue().length == 0) {
+                cursor2.setValue(null);
+            }
+        }
     }
 
     find(spelling) {
@@ -157,5 +177,4 @@ class WordTree {
      * setters and getters
      */
 }
-
 export {Word, WordTree};

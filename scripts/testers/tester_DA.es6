@@ -17,5 +17,7 @@ console.log(wordTree.find('a'));
 console.log(wordTree.find('sxs'));
 console.log(wordTree.find('ab'));
 
-wordTree.insert(wordaaa, db);
+wordTree.insert(word4, db);
+//wordTree.insert(word5, db);
+wordTree.del('able', db);
 console.log(wordTree.find('a'));
