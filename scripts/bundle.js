@@ -292,11 +292,15 @@
 	    }, {
 	        key: 'find',
 	        value: function find(spelling) {
+	            if (spelling == '') {
+	                return [];
+	            }
+
 	            this.cursor = this._root;
 	            for (var i in spelling) {
 	                var index = spelling[i].charCodeAt() - 97;
 	                if (!this.cursor.getValue()[index]) {
-	                    return null;
+	                    return [];
 	                }
 	                this.cursor = this.cursor.getValue()[index];
 	            }
@@ -426,24 +430,40 @@
 	    },
 
 	    init: function init(wordTree) {
+	        var that = this;
 	        //绑定输入事件
 	        document.getElementById(this.cfg.input).addEventListener('input', function () {
 	            var result = wordTree.find(this.value);
-	            console.log(result);
+	            if (result.length > 0) {
+	                that.putDataIntoDrop(result);
+	                that.setDropDownVisible(true);
+	            } else {
+	                that.setDropDownVisible(false);
+	            }
 	        });
 	    },
 
-	    setDropDown: function setDropDown(bool) {
+	    setDropDownVisible: function setDropDownVisible(bool) {
 	        var dropDown = document.getElementById(this.cfg.dropDown);
 	        if (!dropDown) {
 	            return;
 	        }
 
 	        if (bool) {
-	            dropDown.setAttribute('show', '0');
-	        } else {
 	            dropDown.setAttribute('show', '1');
+	        } else {
+	            dropDown.setAttribute('show', '0');
 	        }
+	    },
+
+	    putDataIntoDrop: function putDataIntoDrop(data) {
+	        var str = '';
+	        for (var i in data) {
+	            str += '<li><a href="#">';
+	            str += data[i].getSpelling();
+	            str += '</a></li>';
+	        }
+	        document.getElementById(this.cfg.dropDown).innerHTML = str;
 	    }
 	};
 
@@ -484,7 +504,7 @@
 
 
 	// module
-	exports.push([module.id, "#mainCon {\n  max-width: 768px; }\n", ""]);
+	exports.push([module.id, ".rela {\n  position: relative; }\n\n#mainCon {\n  max-width: 768px; }\n\n#dropDown {\n  display: block; }\n  #dropDown[show='0'] {\n    display: none; }\n", ""]);
 
 	// exports
 

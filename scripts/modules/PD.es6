@@ -160,11 +160,15 @@ class WordTree {
     }
 
     find(spelling) {
+        if (spelling == '') {
+            return [];
+        }
+
         this.cursor = this._root;
         for(let i in spelling) {
             var index = spelling[i].charCodeAt() - 97;
             if(!this.cursor.getValue()[index]) {
-                return null;
+                return [];
             }
             this.cursor = this.cursor.getValue()[index];
         }

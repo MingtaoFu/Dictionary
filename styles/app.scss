@@ -1,5 +1,18 @@
 $maxWidth: 768px;
 
-#mainCon{
+//-----------------------------------------
+.rela {
+	position: relative;
+}
+//-----------------------------------------
+
+#mainCon {
 	max-width: $maxWidth;
+}
+
+#dropDown {
+	&[show='0'] {
+		display: none;
+	}
+	display: block;
 }
