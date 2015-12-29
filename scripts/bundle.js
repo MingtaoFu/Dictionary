@@ -429,6 +429,10 @@
 	        dropDown: 'dropDown'
 	    },
 
+	    tmp: {
+	        value: []
+	    },
+
 	    init: function init(wordTree) {
 	        var that = this;
 	        //绑定输入事件
@@ -439,6 +443,18 @@
 	                that.setDropDownVisible(true);
 	            } else {
 	                that.setDropDownVisible(false);
+	            }
+	            that.tmp.value = result;
+	        });
+
+	        //绑定item点击事件
+	        document.getElementById(this.cfg.dropDown).addEventListener('click', function (e) {
+	            var classList = e.target.classList;
+	            for (var i in classList) {
+	                if (classList[i] == 'wordItem') {
+	                    console.log(e.target.getAttribute("index"));
+	                    return null;
+	                }
 	            }
 	        });
 	    },
@@ -459,7 +475,9 @@
 	    putDataIntoDrop: function putDataIntoDrop(data) {
 	        var str = '';
 	        for (var i in data) {
-	            str += '<li><a href="#">';
+	            str += '<li><a href="#" class="wordItem" index="';
+	            str += i;
+	            str += '">';
 	            str += data[i].getSpelling();
 	            str += '</a></li>';
 	        }
