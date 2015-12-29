@@ -46,11 +46,11 @@
 
 	'use strict';
 
-	__webpack_require__(1);
-
-	var _PD = __webpack_require__(3);
+	var _PD = __webpack_require__(1);
 
 	var PD = _interopRequireWildcard(_PD);
+
+	var _view = __webpack_require__(3);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -60,124 +60,13 @@
 	var mingtao = new Man('tao');
 	mingtao.sayHi();
 	*/
+	//import './testers/tester_DA.es6';
+
+	var wordTree = new PD.WordTree();
+	_view.app.init(wordTree);
 
 /***/ },
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _DA = __webpack_require__(2);
-
-	var DA = _interopRequireWildcard(_DA);
-
-	var _PD = __webpack_require__(3);
-
-	var PD = _interopRequireWildcard(_PD);
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-	var word = new PD.Word('a', 2);
-	var word2 = new PD.Word('sxs', 2);
-	var word3 = new PD.Word('absolute', 2);
-	var word4 = new PD.Word('ahead', 2);
-	var word5 = new PD.Word('able', 2);
-	var wordaaa = new PD.Word('a', 2);
-	var str = JSON.stringify(word);
-	console.log(str);
-	var wordTree = new PD.WordTree();
-	var db = new DA.DB();
-	wordTree.importDB(db.outputDB());
-	console.log(wordTree);
-	console.log(wordTree.find('a'));
-	console.log(wordTree.find('sxs'));
-	console.log(wordTree.find('ab'));
-
-	wordTree.insert(word4, db);
-	//wordTree.insert(word5, db);
-	wordTree.del('able', db);
-	console.log(wordTree.find('a'));
-
-/***/ },
-/* 2 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var DB = (function () {
-	    /**
-	     * 初始化数据库
-	     * 如果数据库存在，返回该对象
-	     * 否则新建
-	     */
-
-	    function DB() {
-	        _classCallCheck(this, DB);
-
-	        if (!localStorage.dicData) {
-	            localStorage.dicData = "[]";
-	        }
-	        this._dicData = JSON.parse(localStorage.dicData);
-	    }
-
-	    /**
-	     * 返回整个数据库的数据
-	     * 它们将直接存入内存，以便快速搜索
-	     */
-
-	    _createClass(DB, [{
-	        key: "outputDB",
-	        value: function outputDB() {
-	            return this._dicData;
-	        }
-
-	        /**
-	         * 基本的数据库操作：增删查改
-	         */
-
-	    }, {
-	        key: "insert",
-	        value: function insert(word) {
-	            this._dicData.push(word);
-	            this.saveToLocal();
-	        }
-	    }, {
-	        key: "del",
-	        value: function del(spelling) {
-	            for (var i in this._dicData) {
-	                if (spelling == this._dicData[i]._spelling) {
-	                    this._dicData.splice(i, 1);
-	                    this.saveToLocal();
-	                    return;
-	                }
-	            }
-	            console.log('DA 找不到这个词.');
-	        }
-	    }, {
-	        key: "update",
-	        value: function update() {}
-	    }, {
-	        key: "saveToLocal",
-	        value: function saveToLocal() {
-	            localStorage.dicData = JSON.stringify(this._dicData);
-	        }
-	    }]);
-
-	    return DB;
-	})();
-
-	exports.DB = DB;
-
-/***/ },
-/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -333,6 +222,8 @@
 
 	        this._root = new TreeNode();
 	        this.cursor = this._root;
+	        this._db = new DA.DB();
+	        this.importDB(this._db.outputDB());
 	    }
 	    /**
 	     * 从数据库导入数据，赋给value属性
@@ -344,7 +235,7 @@
 	        value: function importDB(value) {
 	            for (var i in value) {
 	                this.cursor = this._root;
-	                this._insert(WordTree.objToWord(value[i]));
+	                this.insert(WordTree.objToWord(value[i]));
 	            }
 	        }
 	    }, {
@@ -354,7 +245,7 @@
 	         * 基本操作：增删查改
 	         */
 
-	        value: function insert(word, db) {
+	        value: function insert(word) {
 	            this.cursor = this._root;
 	            var spelling = word.getSpelling();
 	            for (var i in spelling) {
@@ -366,14 +257,14 @@
 	            }
 	            if (!this.cursor.getWord()) {
 	                this.cursor.setWord(word);
-	                db.insert(word);
+	                this._db.insert(word);
 	            }
 	        }
 	    }, {
 	        key: 'del',
-	        value: function del(spelling, db) {
+	        value: function del(spelling) {
 	            this._del(spelling);
-	            db.del(spelling);
+	            this._db.del(spelling);
 	        }
 	    }, {
 	        key: '_del',
@@ -431,6 +322,132 @@
 
 	exports.Word = Word;
 	exports.WordTree = WordTree;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var DB = (function () {
+	    /**
+	     * 初始化数据库
+	     * 如果数据库存在，返回该对象
+	     * 否则新建
+	     */
+
+	    function DB() {
+	        _classCallCheck(this, DB);
+
+	        if (!localStorage.dicData) {
+	            localStorage.dicData = "[]";
+	        }
+	        this._dicData = JSON.parse(localStorage.dicData);
+	    }
+
+	    /**
+	     * 返回整个数据库的数据
+	     * 它们将直接存入内存，以便快速搜索
+	     */
+
+	    _createClass(DB, [{
+	        key: "outputDB",
+	        value: function outputDB() {
+	            return this._dicData;
+	        }
+
+	        /**
+	         * 基本的数据库操作：增删查改
+	         */
+
+	    }, {
+	        key: "insert",
+	        value: function insert(word) {
+	            this._dicData.push(word);
+	            this.saveToLocal();
+	        }
+	    }, {
+	        key: "del",
+	        value: function del(spelling) {
+	            for (var i in this._dicData) {
+	                if (spelling == this._dicData[i]._spelling) {
+	                    this._dicData.splice(i, 1);
+	                    this.saveToLocal();
+	                    return;
+	                }
+	            }
+	            console.log('DA 找不到这个词.');
+	        }
+	    }, {
+	        key: "update",
+	        value: function update() {}
+	    }, {
+	        key: "saveToLocal",
+	        value: function saveToLocal() {
+	            localStorage.dicData = JSON.stringify(this._dicData);
+	        }
+	    }]);
+
+	    return DB;
+	})();
+
+	exports.DB = DB;
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.app = undefined;
+
+	var _PD = __webpack_require__(1);
+
+	var PD = _interopRequireWildcard(_PD);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	var app = {
+	    cfg: {
+	        input: 'input',
+	        panel: 'panel',
+	        dropDown: 'dropDown'
+	    },
+
+	    init: function init(wordTree) {
+	        //绑定输入事件
+	        document.getElementById(this.cfg.input).addEventListener('input', function () {
+	            var result = wordTree.find(this.value);
+	            console.log(result);
+	        });
+	    },
+
+	    setDropDown: function setDropDown(bool) {
+	        var dropDown = document.getElementById(this.cfg.dropDown);
+	        if (!dropDown) {
+	            return;
+	        }
+
+	        if (bool) {
+	            dropDown.setAttribute('show', '0');
+	        } else {
+	            dropDown.setAttribute('show', '1');
+	        }
+	    }
+	};
+
+	exports.app = app;
 
 /***/ },
 /* 4 */

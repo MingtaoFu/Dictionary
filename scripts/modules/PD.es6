@@ -94,6 +94,8 @@ class WordTree {
     constructor() {
         this._root = new TreeNode();
         this.cursor = this._root;
+        this._db = new DA.DB();
+        this.importDB(this._db.outputDB());
     }
     /**
      * 从数据库导入数据，赋给value属性
@@ -102,7 +104,7 @@ class WordTree {
     importDB(value) {
         for(let i in value) {
             this.cursor = this._root;
-            this._insert(WordTree.objToWord(value[i]));
+            this.insert(WordTree.objToWord(value[i]));
         }
     }
 
@@ -114,7 +116,7 @@ class WordTree {
      * 基本操作：增删查改
      */
 
-    insert(word, db) {
+    insert(word) {
         this.cursor = this._root;
         var spelling = word.getSpelling();
         for(let i in spelling) {
@@ -126,13 +128,13 @@ class WordTree {
         }
         if(!this.cursor.getWord()) {
             this.cursor.setWord(word);
-            db.insert(word);
+            this._db.insert(word);
         }
     }
 
-    del(spelling, db) {
+    del(spelling) {
         this._del(spelling);
-        db.del(spelling);
+        this._db.del(spelling);
     }
 
     _del(spelling) {
