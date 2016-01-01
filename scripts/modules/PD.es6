@@ -131,7 +131,7 @@ class WordTree {
     importDB(value) {
         for(let i in value) {
             this.cursor = this._root;
-            this.insert(WordTree.objToWord(value[i]));
+            this.insertToTree(WordTree.objToWord(value[i]));
         }
     }
 
@@ -143,7 +143,7 @@ class WordTree {
      * 基本操作：增删查改
      */
 
-    insert(word) {
+    insertToTree(word) {
         this.cursor = this._root;
         var spelling = word.getSpelling();
         for(let i in spelling) {
@@ -155,9 +155,11 @@ class WordTree {
         }
         if(!this.cursor.getWord()) {
             this.cursor.setWord(word);
-            this._db.insert(word);
+            //this._db.insert(word);
         }
     }
+
+
 
     del(spelling) {
         this._del(spelling);

@@ -272,17 +272,17 @@
 	        value: function importDB(value) {
 	            for (var i in value) {
 	                this.cursor = this._root;
-	                this.insert(WordTree.objToWord(value[i]));
+	                this.insertToTree(WordTree.objToWord(value[i]));
 	            }
 	        }
 	    }, {
-	        key: 'insert',
+	        key: 'insertToTree',
 
 	        /**
 	         * 基本操作：增删查改
 	         */
 
-	        value: function insert(word) {
+	        value: function insertToTree(word) {
 	            this.cursor = this._root;
 	            var spelling = word.getSpelling();
 	            for (var i in spelling) {
@@ -294,7 +294,7 @@
 	            }
 	            if (!this.cursor.getWord()) {
 	                this.cursor.setWord(word);
-	                this._db.insert(word);
+	                //this._db.insert(word);
 	            }
 	        }
 	    }, {
