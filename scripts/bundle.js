@@ -87,11 +87,11 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var Meaning = (function () {
-	    function Meaning(pos, meaning) {
+	    function Meaning(meaning, sentence) {
 	        _classCallCheck(this, Meaning);
 
-	        this.setPOS(pos);
 	        this.setMeaning(meaning);
+	        this.setSentence(sentence);
 	    }
 
 	    /**
@@ -99,9 +99,46 @@
 	     */
 
 	    _createClass(Meaning, [{
+	        key: 'setMeaning',
+	        value: function setMeaning(meaning) {
+	            this._meaning = meaning;
+	        }
+	    }, {
+	        key: 'setSentence',
+	        value: function setSentence(sentence) {
+	            this._sentence = sentence;
+	        }
+	    }, {
+	        key: 'getMeaning',
+	        value: function getMeaning() {
+	            return this._meaning;
+	        }
+	    }, {
+	        key: 'getSentence',
+	        value: function getSentence() {
+	            return this._sentence;
+	        }
+	    }]);
+
+	    return Meaning;
+	})();
+
+	var POS = (function () {
+	    function POS(_POS, meaning) {
+	        _classCallCheck(this, POS);
+
+	        this.setPOS(_POS);
+	        this.setMeaning(meaning);
+	    }
+
+	    /**
+	     * setters and getters
+	     */
+
+	    _createClass(POS, [{
 	        key: 'setPOS',
-	        value: function setPOS(pos) {
-	            this._POS = pos;
+	        value: function setPOS(POS) {
+	            this._POS = POS;
 	        }
 	    }, {
 	        key: 'setMeaning',
@@ -110,7 +147,7 @@
 	        }
 	    }]);
 
-	    return Meaning;
+	    return POS;
 	})();
 
 	var Word = (function () {
@@ -120,7 +157,7 @@
 	        //字符串
 	        this.setSpelling(spelling);
 	        //数组
-	        this.setMeaning(meaning);
+	        this.setPOS(POS);
 	    }
 
 	    /**
@@ -138,14 +175,14 @@
 	            return this._spelling;
 	        }
 	    }, {
-	        key: 'setMeaning',
-	        value: function setMeaning(meaning) {
-	            this._meaning = meaning;
+	        key: 'setPOS',
+	        value: function setPOS(POS) {
+	            this._POS = POS;
 	        }
 	    }, {
-	        key: 'getMeaning',
-	        value: function getMeaning() {
-	            return this._meaning;
+	        key: 'getPOS',
+	        value: function getPOS() {
+	            return this._POS;
 	        }
 
 	        //搜索匹配，含部分匹配
@@ -309,11 +346,6 @@
 	    }, {
 	        key: 'update',
 	        value: function update() {}
-
-	        /**
-	         * setters and getters
-	         */
-
 	    }], [{
 	        key: 'objToWord',
 	        value: function objToWord(obj) {
@@ -434,6 +466,7 @@
 	    },
 
 	    init: function init(wordTree) {
+	        this.wordTree = wordTree;
 	        var that = this;
 	        //绑定输入事件
 	        document.getElementById(this.cfg.input).addEventListener('input', function () {
@@ -452,8 +485,9 @@
 	            var classList = e.target.classList;
 	            for (var i in classList) {
 	                if (classList[i] == 'wordItem') {
-	                    console.log(e.target.getAttribute("index"));
-	                    return null;
+	                    var index = parseInt(e.target.getAttribute("index"));
+	                    that.setContentIntoPanel(that.tmp.value[index]);
+	                    return;
 	                }
 	            }
 	        });
@@ -475,14 +509,31 @@
 	    putDataIntoDrop: function putDataIntoDrop(data) {
 	        var str = '';
 	        for (var i in data) {
-	            str += '<li><a href="#" class="wordItem" index="';
-	            str += i;
-	            str += '">';
+	            str += '<li><a href="#" class="wordItem" index="' + i + '">';
 	            str += data[i].getSpelling();
 	            str += '</a></li>';
 	        }
 	        document.getElementById(this.cfg.dropDown).innerHTML = str;
-	    }
+	    },
+
+	    setContentIntoPanel: function setContentIntoPanel(word) {
+	        console.log(word);
+
+	        var html = '<h1>' + word.getSpelling() + '</h1>';
+	        var POS = word.getPOS();
+	        for (var i in POS) {
+	            console.log(POS[i]);
+	            html = html + '<div><p>' + POS[i].getPOS() + '.</p><ul>';
+	            for (var j in POS[i]) {
+	                html = html + '<li>' + POS[i][j].getMeaning() + '<p>' + POS[i][j].getSentence() + '</p></li>';
+	            }
+	            html = html + '</ul></div>';
+	        }
+
+	        document.getElementById(this.cfg.panel).innerHTML = html;
+	    },
+
+	    del: function del(spelling) {}
 	};
 
 	exports.app = app;
@@ -522,7 +573,7 @@
 
 
 	// module
-	exports.push([module.id, ".rela {\n  position: relative; }\n\n#mainCon {\n  max-width: 768px; }\n\n#dropDown {\n  display: block; }\n  #dropDown[show='0'] {\n    display: none; }\n", ""]);
+	exports.push([module.id, ".rela {\n  position: relative; }\n\n#mainCon {\n  max-width: 768px; }\n\n#dropDown {\n  display: block; }\n  #dropDown[show='0'] {\n    display: none; }\n\n.wordOperation {\n  float: right;\n  margin-left: 10px;\n  display: block; }\n", ""]);
 
 	// exports
 

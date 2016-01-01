@@ -1,16 +1,43 @@
 import * as DA from './DA.es6';
 
 class Meaning {
-    constructor(pos, meaning) {
-        this.setPOS(pos);
+    constructor(meaning, sentence) {
+        this.setMeaning(meaning);
+        this.setSentence(sentence);
+    }
+
+    /**
+     * setters and getters
+     */
+    setMeaning(meaning) {
+        this._meaning = meaning;
+    }
+
+    setSentence(sentence) {
+        this._sentence = sentence;
+    }
+
+    getMeaning() {
+        return this._meaning;
+    }
+
+    getSentence() {
+        return this._sentence;
+    }
+
+}
+
+class POS {
+    constructor(POS, meaning) {
+        this.setPOS(POS);
         this.setMeaning(meaning);
     }
 
     /**
      * setters and getters
      */
-    setPOS(pos) {
-        this._POS = pos;
+    setPOS(POS) {
+        this._POS = POS;
     }
 
     setMeaning(meaning) {
@@ -23,7 +50,7 @@ class Word {
         //字符串
         this.setSpelling(spelling);
         //数组
-        this.setMeaning(meaning);
+        this.setPOS(POS);
 	}
 
 	/**
@@ -35,11 +62,11 @@ class Word {
     getSpelling() {
         return this._spelling;
     }
-    setMeaning(meaning) {
-        this._meaning = meaning;
+    setPOS(POS) {
+        this._POS = POS;
     }
-    getMeaning() {
-        return this._meaning;
+    getPOS() {
+        return this._POS;
     }
 
 	//搜索匹配，含部分匹配
@@ -179,8 +206,5 @@ class WordTree {
 
     }
 
-    /**
-     * setters and getters
-     */
 }
 export {Word, WordTree};
