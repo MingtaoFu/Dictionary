@@ -230,4 +230,4 @@ class WordTree {
     }
 
 }
-export {Word, WordTree};
+export {Word, WordTree, Meaning};

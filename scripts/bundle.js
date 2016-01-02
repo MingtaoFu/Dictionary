@@ -78,7 +78,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.WordTree = exports.Word = undefined;
+	exports.Meaning = exports.WordTree = exports.Word = undefined;
 
 	var _DA = __webpack_require__(2);
 
@@ -388,6 +388,7 @@
 
 	exports.Word = Word;
 	exports.WordTree = WordTree;
+	exports.Meaning = Meaning;
 
 /***/ },
 /* 2 */
@@ -502,11 +503,18 @@
 	        },
 	        show: function show(index) {
 	            $scope.data.word = $scope.data.wordList[index];
+	            $scope.data.wordList = [];
 	        },
 	        init: function init() {
 	            $scope.$watch('data.input', function () {
 	                $scope.method.find($scope.data.input);
 	            });
+	        },
+	        edit: function edit() {
+	            $scope.status = 2;
+	        },
+	        addRow: function addRow(index) {
+	            $scope.data.word.getPOS()[index].addMeaning(new PD.Meaning(null, null));
 	        }
 	    };
 

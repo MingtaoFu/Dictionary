@@ -24,7 +24,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 单词释义
-                <a class="wordOperation">编辑</a>
+                <a class="wordOperation" ng-click="method.edit()">编辑</a>
                 <a class="wordOperation">删除</a>
             </div>
             <div class="panel-body" id="panel">
@@ -41,22 +41,20 @@
                             </li>
                         </ul>
                     </div>
-
                 </div>
-
 
                 <form ng-if="status == 2">
                     <div class="form-group">
                         <label for="spellingCtrl">单词拼写</label>
-                        <input type="text" class="form-control" id="spellingCtrl">
+                        <input type="text" class="form-control" id="spellingCtrl" ng-model="data.word._spelling">
                     </div>
-
-                    <blockquote>
+                    <blockquote ng-repeat="POS in data.word._POS" ng-init="p_index=$index">
                         <label class="control-label">选择词性</label>
                         <div class="controls">
-                            <select class="selectpicker">
+                            <select class="selectpicker" ng-model="POS._POS">
                                 <option>n</option>
-                                <option>v</option>
+                                <option>vi</option>
+                                <option>vt</option>
                                 <option>adj</option>
                                 <option>adv</option>
                                 <option>prep</option>
@@ -71,48 +69,23 @@
                         <table data-toggle="table" id="table">
                             <thead>
                             <tr>
-                                <th data-field="id">ID</th>
                                 <th data-field="meaning">释义</th>
                                 <th data-field="sentence">例句</th>
                                 <th data-field="operation">操作</th>
                             </tr>
                             </thead>
-                            <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input class="form-control"></td>
-                                <td><input class="form-control"></td>
-                                <td><a class="glyphicon glyphicon-remove"></a></td>
+                            <tr ng-repeat="meaning in POS._meaning">
+                                <td><input ng-model="meaning._meaning"></td>
+                                <td><input ng-model="meaning._sentence"></td>
+                                <td>
+                                    <a class="glyphicon glyphicon-remove"></a>
+                                    <a class="glyphicon glyphicon-plus"
+                                       ng-if="$last" ng-click="method.addRow(p_index)"></a>
+                                </td>
                             </tr>
-                            <tr>
-                                <td>2</td>
-                                <td><input class="form-control"></td>
-                                <td><input class="form-control"></td>
-                                <td><a class="glyphicon glyphicon-remove"></a></td>
-                            </tr>
-                            </tbody>
                         </table>
                     </blockquote>
 
-                    <blockquote>
-                        <label class="control-label">选择词性</label>
-                        <div class="controls">
-                            <select class="selectpicker">
-                                <option>n</option>
-                                <option>v</option>
-                                <option>adj</option>
-                                <option>adv</option>
-                                <option>prep</option>
-                                <option>art</option>
-                                <option>abbr</option>
-                                <option>pron</option>
-                                <option>conj</option>
-                                <option>num</option>
-                                <option>int</option>
-                            </select>
-                        </div>
-
-                    </blockquote>
                 </form>
             </div>
         </div>
@@ -122,11 +95,10 @@
 
     </footer>
 </body>
+<script type="text/javascript" src="scripts/vendors/angular.min.js"></script>
 <script type="text/javascript" src="scripts/vendors/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="scripts/vendors/bootstrap.min.js"></script>
 <script type="text/javascript" src="scripts/vendors/bootstrap-select.min.js"></script>
-<script type="text/javascript" src="scripts/vendors/bootstrap-table.min.js"></script>
-<script type="text/javascript" src="scripts/vendors/angular.min.js"></script>
 <script type="text/javascript" src="scripts/bundle.js"></script>
 
 

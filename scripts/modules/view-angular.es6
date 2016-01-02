@@ -23,11 +23,18 @@ app.controller('ctrl', function($scope) {
         },
         show: function(index) {
             $scope.data.word = $scope.data.wordList[index];
+            $scope.data.wordList = [];
         },
         init: function() {
             $scope.$watch('data.input', function() {
                 $scope.method.find($scope.data.input);
             });
+        },
+        edit: function() {
+            $scope.status = 2;
+        },
+        addRow: function(index) {
+            $scope.data.word.getPOS()[index].addMeaning(new PD.Meaning(null, null));
         }
     };
 
