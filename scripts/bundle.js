@@ -515,6 +515,9 @@
 	        },
 	        addRow: function addRow(index) {
 	            $scope.data.word.getPOS()[index].addMeaning(new PD.Meaning(null, null));
+	        },
+	        delRow: function delRow(index, meaningIndex) {
+	            $scope.data.word.getPOS()[index].getMeaning().splice(meaningIndex, 1);
 	        }
 	    };
 

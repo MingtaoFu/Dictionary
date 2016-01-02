@@ -78,7 +78,8 @@
                                 <td><input ng-model="meaning._meaning"></td>
                                 <td><input ng-model="meaning._sentence"></td>
                                 <td>
-                                    <a class="glyphicon glyphicon-remove"></a>
+                                    <a class="glyphicon glyphicon-remove"
+                                       ng-click="method.delRow(p_index, $index)"></a>
                                     <a class="glyphicon glyphicon-plus"
                                        ng-if="$last" ng-click="method.addRow(p_index)"></a>
                                 </td>
