@@ -14,6 +14,7 @@ app.controller('ctrl', function($scope) {
     $scope.data = {
         input: '',
         word: null,
+        wordSpelling: null,
         wordList: []
     };
 
@@ -23,7 +24,9 @@ app.controller('ctrl', function($scope) {
         },
         show: function(index) {
             $scope.data.word = $scope.data.wordList[index];
+            $scope.data.wordSpelling = $scope.data.word.getSpelling();
             $scope.data.wordList = [];
+            $scope.status = 1;
         },
         init: function() {
             $scope.$watch('data.input', function() {
@@ -38,6 +41,10 @@ app.controller('ctrl', function($scope) {
         },
         delRow: function(index, meaningIndex) {
             $scope.data.word.getPOS()[index].getMeaning().splice(meaningIndex, 1);
+        },
+        update: function() {
+            $scope.wordTree.update($scope.data.wordSpelling, $scope.data.word);
+            alert("修改成功");
         }
     };
 

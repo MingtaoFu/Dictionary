@@ -177,7 +177,13 @@ class WordTree {
         }
         if(!this.cursor.getWord()) {
             this.cursor.setWord(word);
-            //this._db.insert(word);
+            return true;
+        }
+    }
+
+    insert(word) {
+        if (this.insertToTree(word)) {
+            this._db.insert(word);
         }
     }
 
@@ -225,8 +231,9 @@ class WordTree {
         return this.cursor.recursionErgodic();
     }
 
-    update() {
-
+    update(oldSpelling, newWord) {
+        this.del(oldSpelling);
+        this.insert(newWord);
     }
 
 }

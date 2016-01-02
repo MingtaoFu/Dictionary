@@ -315,7 +315,14 @@
 	            }
 	            if (!this.cursor.getWord()) {
 	                this.cursor.setWord(word);
-	                //this._db.insert(word);
+	                return true;
+	            }
+	        }
+	    }, {
+	        key: 'insert',
+	        value: function insert(word) {
+	            if (this.insertToTree(word)) {
+	                this._db.insert(word);
 	            }
 	        }
 	    }, {
@@ -366,7 +373,10 @@
 	        }
 	    }, {
 	        key: 'update',
-	        value: function update() {}
+	        value: function update(oldSpelling, newWord) {
+	            this.del(oldSpelling);
+	            this.insert(newWord);
+	        }
 	    }], [{
 	        key: 'objToWord',
 	        value: function objToWord(obj) {
@@ -494,6 +504,7 @@
 	    $scope.data = {
 	        input: '',
 	        word: null,
+	        wordSpelling: null,
 	        wordList: []
 	    };
 
@@ -503,7 +514,9 @@
 	        },
 	        show: function show(index) {
 	            $scope.data.word = $scope.data.wordList[index];
+	            $scope.data.wordSpelling = $scope.data.word.getSpelling();
 	            $scope.data.wordList = [];
+	            $scope.status = 1;
 	        },
 	        init: function init() {
 	            $scope.$watch('data.input', function () {
@@ -518,6 +531,10 @@
 	        },
 	        delRow: function delRow(index, meaningIndex) {
 	            $scope.data.word.getPOS()[index].getMeaning().splice(meaningIndex, 1);
+	        },
+	        update: function update() {
+	            $scope.wordTree.update($scope.data.wordSpelling, $scope.data.word);
+	            alert("修改成功");
 	        }
 	    };
 
