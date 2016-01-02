@@ -45,6 +45,12 @@ app.controller('ctrl', function($scope) {
         update: function() {
             $scope.wordTree.update($scope.data.wordSpelling, $scope.data.word);
             alert("修改成功");
+        },
+        addTable: function() {
+            $scope.data.word.addPOS(new PD.POS('n', [new PD.Meaning(null, null)]));
+        },
+        delTable: function(index) {
+            $scope.data.word.getPOS().splice(index, 1);
         }
     };
 

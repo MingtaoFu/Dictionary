@@ -78,7 +78,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.Meaning = exports.WordTree = exports.Word = undefined;
+	exports.POS = exports.Meaning = exports.WordTree = exports.Word = undefined;
 
 	var _DA = __webpack_require__(2);
 
@@ -399,6 +399,7 @@
 	exports.Word = Word;
 	exports.WordTree = WordTree;
 	exports.Meaning = Meaning;
+	exports.POS = POS;
 
 /***/ },
 /* 2 */
@@ -535,6 +536,12 @@
 	        update: function update() {
 	            $scope.wordTree.update($scope.data.wordSpelling, $scope.data.word);
 	            alert("修改成功");
+	        },
+	        addTable: function addTable() {
+	            $scope.data.word.addPOS(new PD.POS('n', [new PD.Meaning(null, null)]));
+	        },
+	        delTable: function delTable(index) {
+	            $scope.data.word.getPOS().splice(index, 1);
 	        }
 	    };
 
