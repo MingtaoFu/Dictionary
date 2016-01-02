@@ -40,13 +40,23 @@ class POS {
         this._POS = POS;
     }
 
+    getPOS() {
+        return this._POS;
+    }
+    getMeaning() {
+        return this._meaning;
+    }
     setMeaning(meaning) {
         this._meaning = meaning;
+    }
+
+    addMeaning(meaning) {
+        this._meaning.push(meaning);
     }
 }
 
 class Word {
-	constructor(spelling, meaning) {
+	constructor(spelling, POS) {
         //字符串
         this.setSpelling(spelling);
         //数组
@@ -69,6 +79,9 @@ class Word {
         return this._POS;
     }
 
+    addPOS(POS) {
+        this._POS.push(POS);
+    }
 	//搜索匹配，含部分匹配
 	match(str) {
 
@@ -136,7 +149,16 @@ class WordTree {
     }
 
     static objToWord(obj) {
-        return new Word(obj._spelling, obj._meaning);
+        var word = new Word(obj._spelling, []);
+        for (let pos in obj._POS) {
+            var POSObj = new POS(obj._POS[pos]._POS, []);
+            for (let meaning in obj._POS[pos]._meaning) {
+                var meaningObj = new Meaning(obj._POS[pos]._meaning[meaning]._meaning, obj._POS[pos]._meaning[meaning]._sentence);
+                POSObj.addMeaning(meaningObj);
+            }
+            word.addPOS(POSObj);
+        }
+        return word;
     }
 
     /**
@@ -158,7 +180,6 @@ class WordTree {
             //this._db.insert(word);
         }
     }
-
 
 
     del(spelling) {

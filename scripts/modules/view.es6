@@ -1,5 +1,18 @@
 import * as PD from './PD.es6';
 
+var angularApp = angular.module('AngularApp', []);
+angularApp.controller("formCtrl", function($scope) {
+    $scope.aa = 3;
+});
+angularApp.methods = {
+    importWord: function() {
+
+    },
+    outputWord: function() {
+
+    }
+};
+
 var app = {
     cfg: {
         input: 'input',
@@ -8,7 +21,8 @@ var app = {
     },
 
     tmp: {
-        value: []
+        value: [],
+        word: null
     },
 
     init: function(wordTree) {
@@ -33,6 +47,7 @@ var app = {
                 if (classList[i] == 'wordItem') {
                     var index = parseInt(e.target.getAttribute("index"));
                     that.setContentIntoPanel(that.tmp.value[index]);
+                    that.setDropDownVisible(false);
                     return;
                 }
             }
@@ -79,9 +94,20 @@ var app = {
         document.getElementById(this.cfg.panel).innerHTML = html;
     },
 
+    /**
+     * 生成修改时应出现的表单
+     */
+    createForm: function() {
+        var word = this.cfg.tmp.word;
+        if (word == null) {
+            alert('出现错误，请刷新页面');
+        }
+
+    },
+
     del: function(spelling) {
 
     }
 };
 
-export {app};
+export {app, angularApp};

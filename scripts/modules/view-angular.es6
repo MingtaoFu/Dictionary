@@ -1,0 +1,36 @@
+import * as PD from './PD.es6';
+
+var app = angular.module('app', []);
+
+app.controller('ctrl', function($scope) {
+    /**
+     * 状态。1为展示，2为编辑
+     * @type {number}
+     */
+    $scope.status = 1;
+
+    $scope.wordTree = new PD.WordTree();
+
+    $scope.data = {
+        input: '',
+        word: null,
+        wordList: []
+    };
+
+    $scope.method = {
+        find: function(spelling) {
+            $scope.data.wordList = $scope.wordTree.find(spelling);
+        },
+        show: function(index) {
+            $scope.data.word = $scope.data.wordList[index];
+        },
+        init: function() {
+            $scope.$watch('data.input', function() {
+                $scope.method.find($scope.data.input);
+            });
+        }
+    };
+
+    $scope.method.init();
+
+});

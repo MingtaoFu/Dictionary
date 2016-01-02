@@ -1,18 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="app" >
 <head>
     <meta charset="utf-8">
     <title>Dictionary</title>
     <link rel="stylesheet" href="styles/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/bootstrap-select.min.css">
+    <link rel="stylesheet" href="styles/bootstrap-table.min.css">
 </head>
-<body>
+<body ng-controller="ctrl">
     <header>
         <br>
     </header>
     <div class="container" id="mainCon">
         <div class="input-group-lg rela">
-            <input type="text" class="form-control" placeholder="输入单词" id="input">
-            <ul class="dropdown-menu" aria-labelledby="dLabel" id="dropDown" show="0">
+            <input type="text" class="form-control" placeholder="输入单词" id="input" ng-model="data.input">
+            <ul ng-show="data.wordList.length!=0" class="dropdown-menu" aria-labelledby="dLabel" id="dropDown">
+                <li ng-repeat="item in data.wordList">
+                    <a href="javascript:void 0" ng-click="method.show($index)">{{item.getSpelling()}}</a>
+                </li>
             </ul>
         </div>
         <br>
@@ -23,34 +28,92 @@
                 <a class="wordOperation">删除</a>
             </div>
             <div class="panel-body" id="panel">
-                <h1>work</h1>
-                <div>
-                    <p>
-                        n.
-                    </p>
-                    <ul>
-                        <li>
-                            工作
-                        </li>
-                        <li>
-                            作品
-                        </li>
-                    </ul>
+                <div ng-if="data.word && status == 1">
+                    <h1>{{data.word.getSpelling()}}</h1>
+                    <div ng-repeat="POS in data.word.getPOS()">
+                        <p>
+                            {{POS.getPOS()}}
+                        </p>
+                        <ul>
+                            <li ng-repeat="meaning in POS.getMeaning()">
+                                {{meaning.getMeaning()}}
+                                <p>{{meaning.getSentence()}}</p>
+                            </li>
+                        </ul>
+                    </div>
+
                 </div>
-                <div>
-                    <p>
-                        v.
-                    </p>
-                    <ul>
-                        <li>
-                            工作
-                            <p>I am working.</p>
-                        </li>
-                        <li>
-                            计算出
-                        </li>
-                    </ul>
-                </div>
+
+
+                <form ng-if="status == 2">
+                    <div class="form-group">
+                        <label for="spellingCtrl">单词拼写</label>
+                        <input type="text" class="form-control" id="spellingCtrl">
+                    </div>
+
+                    <blockquote>
+                        <label class="control-label">选择词性</label>
+                        <div class="controls">
+                            <select class="selectpicker">
+                                <option>n</option>
+                                <option>v</option>
+                                <option>adj</option>
+                                <option>adv</option>
+                                <option>prep</option>
+                                <option>art</option>
+                                <option>abbr</option>
+                                <option>pron</option>
+                                <option>conj</option>
+                                <option>num</option>
+                                <option>int</option>
+                            </select>
+                        </div>
+                        <table data-toggle="table" id="table">
+                            <thead>
+                            <tr>
+                                <th data-field="id">ID</th>
+                                <th data-field="meaning">释义</th>
+                                <th data-field="sentence">例句</th>
+                                <th data-field="operation">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input class="form-control"></td>
+                                <td><input class="form-control"></td>
+                                <td><a class="glyphicon glyphicon-remove"></a></td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><input class="form-control"></td>
+                                <td><input class="form-control"></td>
+                                <td><a class="glyphicon glyphicon-remove"></a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </blockquote>
+
+                    <blockquote>
+                        <label class="control-label">选择词性</label>
+                        <div class="controls">
+                            <select class="selectpicker">
+                                <option>n</option>
+                                <option>v</option>
+                                <option>adj</option>
+                                <option>adv</option>
+                                <option>prep</option>
+                                <option>art</option>
+                                <option>abbr</option>
+                                <option>pron</option>
+                                <option>conj</option>
+                                <option>num</option>
+                                <option>int</option>
+                            </select>
+                        </div>
+
+                    </blockquote>
+                </form>
             </div>
         </div>
     </div>
@@ -61,6 +124,10 @@
 </body>
 <script type="text/javascript" src="scripts/vendors/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="scripts/vendors/bootstrap.min.js"></script>
+<script type="text/javascript" src="scripts/vendors/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="scripts/vendors/bootstrap-table.min.js"></script>
+<script type="text/javascript" src="scripts/vendors/angular.min.js"></script>
 <script type="text/javascript" src="scripts/bundle.js"></script>
+
 
 </html>

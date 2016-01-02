@@ -11,14 +11,13 @@ $maxWidth: 768px;
 }
 
 #dropDown {
-	&[show='0'] {
-		display: none;
-	}
 	display: block;
 }
 
+/*
 .wordOperation {
 	float: right;
 	margin-left: 10px;
 	display: block;
 }
+*/

@@ -50,10 +50,15 @@
 
 	var PD = _interopRequireWildcard(_PD);
 
-	var _view = __webpack_require__(3);
+	__webpack_require__(3);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
+	//import {app, angularApp} from './modules/view.es6';
+
+	//var wordTree = new PD.WordTree();
+	//app.init(wordTree);
+	//console.log(angularApp)
 	__webpack_require__(4);
 	/*
 	var Man = require('./modules/test.js');
@@ -61,9 +66,6 @@
 	mingtao.sayHi();
 	*/
 	//import './testers/tester_DA.es6';
-
-	var wordTree = new PD.WordTree();
-	_view.app.init(wordTree);
 
 /***/ },
 /* 1 */
@@ -141,9 +143,24 @@
 	            this._POS = POS;
 	        }
 	    }, {
+	        key: 'getPOS',
+	        value: function getPOS() {
+	            return this._POS;
+	        }
+	    }, {
+	        key: 'getMeaning',
+	        value: function getMeaning() {
+	            return this._meaning;
+	        }
+	    }, {
 	        key: 'setMeaning',
 	        value: function setMeaning(meaning) {
 	            this._meaning = meaning;
+	        }
+	    }, {
+	        key: 'addMeaning',
+	        value: function addMeaning(meaning) {
+	            this._meaning.push(meaning);
 	        }
 	    }]);
 
@@ -151,7 +168,7 @@
 	})();
 
 	var Word = (function () {
-	    function Word(spelling, meaning) {
+	    function Word(spelling, POS) {
 	        _classCallCheck(this, Word);
 
 	        //字符串
@@ -184,7 +201,11 @@
 	        value: function getPOS() {
 	            return this._POS;
 	        }
-
+	    }, {
+	        key: 'addPOS',
+	        value: function addPOS(POS) {
+	            this._POS.push(POS);
+	        }
 	        //搜索匹配，含部分匹配
 
 	    }, {
@@ -349,7 +370,16 @@
 	    }], [{
 	        key: 'objToWord',
 	        value: function objToWord(obj) {
-	            return new Word(obj._spelling, obj._meaning);
+	            var word = new Word(obj._spelling, []);
+	            for (var pos in obj._POS) {
+	                var POSObj = new POS(obj._POS[pos]._POS, []);
+	                for (var meaning in obj._POS[pos]._meaning) {
+	                    var meaningObj = new Meaning(obj._POS[pos]._meaning[meaning]._meaning, obj._POS[pos]._meaning[meaning]._sentence);
+	                    POSObj.addMeaning(meaningObj);
+	                }
+	                word.addPOS(POSObj);
+	            }
+	            return word;
 	        }
 	    }]);
 
@@ -443,100 +473,45 @@
 
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.app = undefined;
-
 	var _PD = __webpack_require__(1);
 
 	var PD = _interopRequireWildcard(_PD);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-	var app = {
-	    cfg: {
-	        input: 'input',
-	        panel: 'panel',
-	        dropDown: 'dropDown'
-	    },
+	var app = angular.module('app', []);
 
-	    tmp: {
-	        value: []
-	    },
+	app.controller('ctrl', function ($scope) {
+	    /**
+	     * 状态。1为展示，2为编辑
+	     * @type {number}
+	     */
+	    $scope.status = 1;
 
-	    init: function init(wordTree) {
-	        this.wordTree = wordTree;
-	        var that = this;
-	        //绑定输入事件
-	        document.getElementById(this.cfg.input).addEventListener('input', function () {
-	            var result = wordTree.find(this.value);
-	            if (result.length > 0) {
-	                that.putDataIntoDrop(result);
-	                that.setDropDownVisible(true);
-	            } else {
-	                that.setDropDownVisible(false);
-	            }
-	            that.tmp.value = result;
-	        });
+	    $scope.wordTree = new PD.WordTree();
 
-	        //绑定item点击事件
-	        document.getElementById(this.cfg.dropDown).addEventListener('click', function (e) {
-	            var classList = e.target.classList;
-	            for (var i in classList) {
-	                if (classList[i] == 'wordItem') {
-	                    var index = parseInt(e.target.getAttribute("index"));
-	                    that.setContentIntoPanel(that.tmp.value[index]);
-	                    return;
-	                }
-	            }
-	        });
-	    },
+	    $scope.data = {
+	        input: '',
+	        word: null,
+	        wordList: []
+	    };
 
-	    setDropDownVisible: function setDropDownVisible(bool) {
-	        var dropDown = document.getElementById(this.cfg.dropDown);
-	        if (!dropDown) {
-	            return;
+	    $scope.method = {
+	        find: function find(spelling) {
+	            $scope.data.wordList = $scope.wordTree.find(spelling);
+	        },
+	        show: function show(index) {
+	            $scope.data.word = $scope.data.wordList[index];
+	        },
+	        init: function init() {
+	            $scope.$watch('data.input', function () {
+	                $scope.method.find($scope.data.input);
+	            });
 	        }
+	    };
 
-	        if (bool) {
-	            dropDown.setAttribute('show', '1');
-	        } else {
-	            dropDown.setAttribute('show', '0');
-	        }
-	    },
-
-	    putDataIntoDrop: function putDataIntoDrop(data) {
-	        var str = '';
-	        for (var i in data) {
-	            str += '<li><a href="#" class="wordItem" index="' + i + '">';
-	            str += data[i].getSpelling();
-	            str += '</a></li>';
-	        }
-	        document.getElementById(this.cfg.dropDown).innerHTML = str;
-	    },
-
-	    setContentIntoPanel: function setContentIntoPanel(word) {
-	        console.log(word);
-
-	        var html = '<h1>' + word.getSpelling() + '</h1>';
-	        var POS = word.getPOS();
-	        for (var i in POS) {
-	            console.log(POS[i]);
-	            html = html + '<div><p>' + POS[i].getPOS() + '.</p><ul>';
-	            for (var j in POS[i]) {
-	                html = html + '<li>' + POS[i][j].getMeaning() + '<p>' + POS[i][j].getSentence() + '</p></li>';
-	            }
-	            html = html + '</ul></div>';
-	        }
-
-	        document.getElementById(this.cfg.panel).innerHTML = html;
-	    },
-
-	    del: function del(spelling) {}
-	};
-
-	exports.app = app;
+	    $scope.method.init();
+	});
 
 /***/ },
 /* 4 */
@@ -573,7 +548,7 @@
 
 
 	// module
-	exports.push([module.id, ".rela {\n  position: relative; }\n\n#mainCon {\n  max-width: 768px; }\n\n#dropDown {\n  display: block; }\n  #dropDown[show='0'] {\n    display: none; }\n\n.wordOperation {\n  float: right;\n  margin-left: 10px;\n  display: block; }\n", ""]);
+	exports.push([module.id, ".rela {\n  position: relative; }\n\n#mainCon {\n  max-width: 768px; }\n\n#dropDown {\n  display: block; }\n\n/*\n.wordOperation {\n\tfloat: right;\n\tmargin-left: 10px;\n\tdisplay: block;\n}\n*/\n", ""]);
 
 	// exports
 
