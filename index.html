@@ -24,7 +24,8 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 单词释义
-                <a class="wordOperation" ng-click="method.edit()">编辑</a>
+                <a class="wordOperation" ng-click="method.addToTmp()">新增</a>
+                <a class="wordOperation" ng-click="method.edit()" ng-if="data.word">编辑</a>
                 <a class="wordOperation">删除</a>
             </div>
             <div class="panel-body" id="panel">
@@ -43,12 +44,12 @@
                     </div>
                 </div>
 
-                <form ng-if="status == 2">
+                <form ng-if="status > 1">
                     <div class="form-group">
                         <label for="spellingCtrl">单词拼写</label>
                         <input type="text" class="form-control" id="spellingCtrl" ng-model="data.word._spelling">
                     </div>
-                    <blockquote ng-repeat="POS in data.word._POS">
+                    <blockquote ng-repeat="POS in data.word._POS" class="POS">
                         <a class="glyphicon glyphicon-remove"
                            ng-if="!$first || data.word._POS.length>1" ng-click="method.delTable($index)"></a>
                         <label class="control-label">选择词性</label>
@@ -77,8 +78,8 @@
                             </tr>
                             </thead>
                             <tr ng-repeat="meaning in POS._meaning">
-                                <td><input ng-model="meaning._meaning"></td>
-                                <td><input ng-model="meaning._sentence"></td>
+                                <td><input ng-model="meaning._meaning" class="form-control"></td>
+                                <td><input ng-model="meaning._sentence" class="form-control"></td>
                                 <td>
                                     <a class="glyphicon glyphicon-remove"
                                        ng-if="!$first || POS._meaning.length>1" ng-click="method.delRow($parent.$index, $index)"></a>
@@ -91,7 +92,7 @@
 
                     <button class="btn btn-default glyphicon glyphicon-plus" ng-click="method.addTable()"></button>
 
-                    <input type="submit" class="btn btn-success" ng-click="method.update()">
+                    <input type="submit" class="btn btn-success" ng-click="method.submit()">
 
                 </form>
             </div>

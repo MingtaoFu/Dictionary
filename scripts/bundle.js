@@ -495,7 +495,7 @@
 
 	app.controller('ctrl', function ($scope) {
 	    /**
-	     * 状态。1为展示，2为编辑
+	     * 状态。1为展示，2为编辑，3为新增
 	     * @type {number}
 	     */
 	    $scope.status = 1;
@@ -524,6 +524,10 @@
 	                $scope.method.find($scope.data.input);
 	            });
 	        },
+	        addToTmp: function addToTmp() {
+	            $scope.status = 3;
+	            $scope.data.word = new PD.Word('spelling', [new PD.POS('n', [new PD.Meaning('meaning', 'sentence')])]);
+	        },
 	        edit: function edit() {
 	            $scope.status = 2;
 	        },
@@ -533,9 +537,19 @@
 	        delRow: function delRow(index, meaningIndex) {
 	            $scope.data.word.getPOS()[index].getMeaning().splice(meaningIndex, 1);
 	        },
-	        update: function update() {
-	            $scope.wordTree.update($scope.data.wordSpelling, $scope.data.word);
-	            alert("修改成功");
+	        submit: function submit() {
+	            switch ($scope.status) {
+	                case 2:
+	                    $scope.wordTree.update($scope.data.wordSpelling, $scope.data.word);
+	                    alert("修改成功");
+	                    break;
+	                case 3:
+	                    $scope.wordTree.insert($scope.data.word);
+	                    alert("新增成功");
+	                    break;
+	                default:
+	                    alert("致命错误");
+	            }
 	        },
 	        addTable: function addTable() {
 	            $scope.data.word.addPOS(new PD.POS('n', [new PD.Meaning(null, null)]));
@@ -583,7 +597,7 @@
 
 
 	// module
-	exports.push([module.id, ".rela {\n  position: relative; }\n\n#mainCon {\n  max-width: 768px; }\n\n#dropDown {\n  display: block; }\n\n/*\n.wordOperation {\n\tfloat: right;\n\tmargin-left: 10px;\n\tdisplay: block;\n}\n*/\n", ""]);
+	exports.push([module.id, ".rela {\n  position: relative; }\n\n#mainCon {\n  max-width: 768px; }\n\n#dropDown {\n  display: block; }\n\n.wordOperation {\n  float: right;\n  margin-left: 10px;\n  display: block; }\n\n.POS {\n  border: 1px solid #ddd;\n  border-radius: 4px; }\n", ""]);
 
 	// exports
 
