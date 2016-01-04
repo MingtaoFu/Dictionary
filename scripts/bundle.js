@@ -627,7 +627,7 @@
 
 
 	// module
-	exports.push([module.id, ".rela {\n  position: relative; }\n\n#mainCon {\n  max-width: 768px; }\n\n#dropDown {\n  display: block; }\n\n.wordOperation {\n  float: right;\n  margin-left: 10px;\n  display: block; }\n\n.POS {\n  border: 1px solid #ddd;\n  border-radius: 4px; }\n", ""]);
+	exports.push([module.id, "select {\n  -webkit-appearance: button;\n  border-radius: 4px;\n  -moz-appearance: button;\n  background-color: white;\n  border: 1px solid #ddd; }\n\n.rela {\n  position: relative; }\n\n#mainCon {\n  max-width: 768px; }\n\n#dropDown {\n  display: block; }\n\n.wordOperation {\n  float: right;\n  margin-left: 10px;\n  display: block; }\n\n.POS {\n  border: 1px solid #ddd;\n  border-radius: 4px; }\n", ""]);
 
 	// exports
 

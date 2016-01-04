@@ -4,8 +4,6 @@
     <meta charset="utf-8">
     <title>Dictionary</title>
     <link rel="stylesheet" href="styles/bootstrap.min.css">
-    <link rel="stylesheet" href="styles/bootstrap-select.min.css">
-    <link rel="stylesheet" href="styles/bootstrap-table.min.css">
 </head>
 <body ng-controller="ctrl">
     <header>
@@ -52,31 +50,28 @@
                     <blockquote ng-repeat="POS in data.word._POS" class="POS">
                         <a class="glyphicon glyphicon-remove"
                            ng-if="!$first || data.word._POS.length>1" ng-click="method.delTable($index)"></a>
-                        <label class="control-label">选择词性</label>
-                        <div class="controls">
-                            <select class="selectpicker" ng-model="POS._POS">
-                                <option>n</option>
-                                <option>vi</option>
-                                <option>vt</option>
-                                <option>adj</option>
-                                <option>adv</option>
-                                <option>prep</option>
-                                <option>art</option>
-                                <option>abbr</option>
-                                <option>pron</option>
-                                <option>conj</option>
-                                <option>num</option>
-                                <option>int</option>
-                            </select>
-                        </div>
+                        <label for="POSSelector">选择词性</label>
+                        <select ng-model="POS._POS" id="POSSelector">
+                            <option>n</option>
+                            <option>vi</option>
+                            <option>vt</option>
+                            <option>adj</option>
+                            <option>adv</option>
+                            <option>prep</option>
+                            <option>art</option>
+                            <option>abbr</option>
+                            <option>pron</option>
+                            <option>conj</option>
+                            <option>num</option>
+                            <option>int</option>
+                        </select>
+
                         <table data-toggle="table" id="table">
-                            <thead>
                             <tr>
-                                <th data-field="meaning">释义</th>
-                                <th data-field="sentence">例句</th>
-                                <th data-field="operation">操作</th>
+                                <td>释义</td>
+                                <td>例句</td>
+                                <td>操作</td>
                             </tr>
-                            </thead>
                             <tr ng-repeat="meaning in POS._meaning">
                                 <td><input ng-model="meaning._meaning" class="form-control"></td>
                                 <td><input ng-model="meaning._sentence" class="form-control"></td>
@@ -106,7 +101,6 @@
 <script type="text/javascript" src="scripts/vendors/angular.min.js"></script>
 <script type="text/javascript" src="scripts/vendors/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="scripts/vendors/bootstrap.min.js"></script>
-<script type="text/javascript" src="scripts/vendors/bootstrap-select.min.js"></script>
 <script type="text/javascript" src="scripts/bundle.js"></script>
 
 
