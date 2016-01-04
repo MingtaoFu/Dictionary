@@ -528,6 +528,12 @@
 	            $scope.status = 3;
 	            $scope.data.word = new PD.Word('spelling', [new PD.POS('n', [new PD.Meaning('meaning', 'sentence')])]);
 	        },
+	        del: function del() {
+	            if (confirm("确认删除吗?")) {
+	                $scope.wordTree.del($scope.data.word.getSpelling());
+	                alert("删除成功");
+	            }
+	        },
 	        edit: function edit() {
 	            $scope.status = 2;
 	        },
