@@ -22,11 +22,22 @@ app.controller('ctrl', function($scope) {
         find: function(spelling) {
             $scope.data.wordList = $scope.wordTree.find(spelling);
         },
-        show: function(index) {
-            $scope.data.word = $scope.data.wordList[index];
+        _show: function (index, byInput) {
+            if(byInput) {
+                $scope.data.word = $scope.data.wordList[index];
+                $scope.data.wordList = [];
+            }
+
             $scope.data.wordSpelling = $scope.data.word.getSpelling();
-            $scope.data.wordList = [];
             $scope.status = 1;
+        },
+        show: function(index) {
+            if($scope.status > 1) {
+                if(!confirm("确定放弃当前编辑?")) {
+                    return;
+                }
+            }
+            this._show(index, true);
         },
         init: function() {
             $scope.$watch('data.input', function() {
@@ -34,16 +45,27 @@ app.controller('ctrl', function($scope) {
             });
         },
         addToTmp: function() {
+            if($scope.status > 1) {
+                if(!confirm("确定放弃当前编辑?")) {
+                    return;
+                }
+            }
             $scope.status = 3;
             $scope.data.word = new PD.Word('spelling',[new PD.POS('n', [new PD.Meaning('meaning', 'sentence')])]);
         },
         del: function() {
             if(confirm("确认删除吗?")) {
                 $scope.wordTree.del($scope.data.word.getSpelling());
+                $scope.data.word = null;
                 alert("删除成功");
             }
         },
         edit: function() {
+            if($scope.status > 1) {
+                if(!confirm("确定放弃当前编辑?")) {
+                    return;
+                }
+            }
             $scope.status = 2;
         },
         addRow: function(index) {
@@ -57,10 +79,12 @@ app.controller('ctrl', function($scope) {
                 case 2:
                     $scope.wordTree.update($scope.data.wordSpelling, $scope.data.word);
                     alert("修改成功");
+                    $scope.method._show(null, false);
                     break;
                 case 3:
                     $scope.wordTree.insert($scope.data.word);
                     alert("新增成功");
+                    $scope.method._show(null, false);
                     break;
                 default:
                     alert("致命错误");

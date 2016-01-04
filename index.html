@@ -25,7 +25,7 @@
             <div class="panel-heading">
                 单词释义
                 <a class="wordOperation" ng-click="method.addToTmp()">新增</a>
-                <a class="wordOperation" ng-click="method.edit()" ng-if="data.word">编辑</a>
+                <a class="wordOperation" ng-click="method.edit()" ng-if="data.word && status==1">编辑</a>
                 <a class="wordOperation" ng-click="method.del()" ng-if="data.word && status==1">删除</a>
             </div>
             <div class="panel-body" id="panel">
