@@ -317,13 +317,16 @@
 	                this.cursor.setWord(word);
 	                return true;
 	            }
+	            return false;
 	        }
 	    }, {
 	        key: 'insert',
 	        value: function insert(word) {
 	            if (this.insertToTree(word)) {
 	                this._db.insert(word);
+	                return true;
 	            }
+	            return false;
 	        }
 	    }, {
 	        key: 'del',
@@ -573,9 +576,12 @@
 	                    $scope.method._show(null, false);
 	                    break;
 	                case 3:
-	                    $scope.wordTree.insert($scope.data.word);
-	                    alert("新增成功");
-	                    $scope.method._show(null, false);
+	                    if ($scope.wordTree.insert($scope.data.word)) {
+	                        alert("新增成功");
+	                        $scope.method._show(null, false);
+	                    } else {
+	                        alert("单词已存在");
+	                    }
 	                    break;
 	                default:
 	                    alert("致命错误");

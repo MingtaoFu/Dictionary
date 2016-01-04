@@ -179,12 +179,15 @@ class WordTree {
             this.cursor.setWord(word);
             return true;
         }
+        return false;
     }
 
     insert(word) {
         if (this.insertToTree(word)) {
             this._db.insert(word);
+            return true;
         }
+        return false;
     }
 
 
