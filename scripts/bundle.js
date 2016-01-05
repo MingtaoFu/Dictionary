@@ -232,14 +232,19 @@
 	    function TreeNode() {
 	        _classCallCheck(this, TreeNode);
 
-	        this._value = [];
+	        this._next = [];
 	        this._word = null;
 	    }
 
 	    _createClass(TreeNode, [{
-	        key: 'getValue',
-	        value: function getValue() {
-	            return this._value;
+	        key: 'getNext',
+	        value: function getNext() {
+	            return this._next;
+	        }
+	    }, {
+	        key: 'setNext',
+	        value: function setNext(next) {
+	            this._next = null;
 	        }
 	    }, {
 	        key: 'setWord',
@@ -261,8 +266,8 @@
 	            if (this._word) {
 	                resultArr.push(this._word);
 	            }
-	            for (var i in this._value) {
-	                var nextArr = this._value[i].recursionErgodic();
+	            for (var i in this._next) {
+	                var nextArr = this._next[i].recursionErgodic();
 	                for (var j in nextArr) {
 	                    resultArr.push(nextArr[j]);
 	                }
@@ -308,10 +313,10 @@
 	            var spelling = word.getSpelling();
 	            for (var i in spelling) {
 	                var index = spelling[i].charCodeAt() - 97;
-	                if (!this.cursor.getValue()[index]) {
-	                    this.cursor.getValue()[index] = new TreeNode();
+	                if (!this.cursor.getNext()[index]) {
+	                    this.cursor.getNext()[index] = new TreeNode();
 	                }
-	                this.cursor = this.cursor.getValue()[index];
+	                this.cursor = this.cursor.getNext()[index];
 	            }
 	            if (!this.cursor.getWord()) {
 	                this.cursor.setWord(word);
@@ -343,17 +348,17 @@
 	            for (var i in spelling) {
 	                cursor2 = this.cursor;
 	                var index = spelling[i].charCodeAt() - 97;
-	                if (!this.cursor.getValue()[index]) {
+	                if (!this.cursor.getNext()[index]) {
 	                    return null;
 	                }
-	                this.cursor = this.cursor.getValue()[index];
+	                this.cursor = this.cursor.getNext()[index];
 	            }
-	            if (this.cursor.getValue()) {
+	            if (this.cursor.getNext()) {
 	                this.cursor.setWord(null);
 	            } else {
-	                cursor2.getValue()[index] = null;
-	                if (cursor2.getValue().length == 0) {
-	                    cursor2.setValue(null);
+	                cursor2.getNext()[index] = null;
+	                if (cursor2.getNext().length == 0) {
+	                    cursor2.setNext(null);
 	                }
 	            }
 	        }
@@ -367,10 +372,10 @@
 	            this.cursor = this._root;
 	            for (var i in spelling) {
 	                var index = spelling[i].charCodeAt() - 97;
-	                if (!this.cursor.getValue()[index]) {
+	                if (!this.cursor.getNext()[index]) {
 	                    return [];
 	                }
-	                this.cursor = this.cursor.getValue()[index];
+	                this.cursor = this.cursor.getNext()[index];
 	            }
 	            return this.cursor.recursionErgodic();
 	        }
@@ -545,7 +550,8 @@
 	                }
 	            }
 	            $scope.status = 3;
-	            $scope.data.word = new PD.Word('spelling', [new PD.POS('n', [new PD.Meaning('meaning', 'sentence')])]);
+	            //$scope.data.word = new PD.Word('spelling',[new PD.POS('n', [new PD.Meaning('meaning', 'sentence')])]);
+	            $scope.data.word = new PD.Word('', [new PD.POS('n', [new PD.Meaning('', '')])]);
 	        },
 	        del: function del() {
 	            if (confirm("确认删除吗?")) {

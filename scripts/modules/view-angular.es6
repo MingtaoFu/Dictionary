@@ -51,7 +51,8 @@ app.controller('ctrl', function($scope) {
                 }
             }
             $scope.status = 3;
-            $scope.data.word = new PD.Word('spelling',[new PD.POS('n', [new PD.Meaning('meaning', 'sentence')])]);
+            //$scope.data.word = new PD.Word('spelling',[new PD.POS('n', [new PD.Meaning('meaning', 'sentence')])]);
+            $scope.data.word = new PD.Word('',[new PD.POS('n', [new PD.Meaning('', '')])]);
         },
         del: function() {
             if(confirm("确认删除吗?")) {

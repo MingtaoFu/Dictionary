@@ -100,12 +100,15 @@ class Word {
 
 class TreeNode {
     constructor() {
-        this._value = [];
+        this._next = [];
         this._word = null;
     }
 
-    getValue() {
-        return this._value;
+    getNext() {
+        return this._next;
+    }
+    setNext(next) {
+        this._next = null;
     }
     setWord(word) {
         this._word = word;
@@ -120,8 +123,8 @@ class TreeNode {
         if(this._word) {
             resultArr.push(this._word);
         }
-        for (let i in this._value) {
-            var nextArr = this._value[i].recursionErgodic();
+        for (let i in this._next) {
+            var nextArr = this._next[i].recursionErgodic();
             for (let j in nextArr) {
                  resultArr.push(nextArr[j]);
             }
@@ -170,10 +173,10 @@ class WordTree {
         var spelling = word.getSpelling();
         for(let i in spelling) {
             var index = spelling[i].charCodeAt() - 97;
-            if(!this.cursor.getValue()[index]) {
-                this.cursor.getValue()[index] = new TreeNode();
+            if(!this.cursor.getNext()[index]) {
+                this.cursor.getNext()[index] = new TreeNode();
             }
-            this.cursor = this.cursor.getValue()[index];
+            this.cursor = this.cursor.getNext()[index];
         }
         if(!this.cursor.getWord()) {
             this.cursor.setWord(word);
@@ -203,17 +206,17 @@ class WordTree {
         for(let i in spelling) {
             cursor2 = this.cursor;
             var index = spelling[i].charCodeAt() - 97;
-            if(!this.cursor.getValue()[index]) {
+            if(!this.cursor.getNext()[index]) {
                 return null;
             }
-            this.cursor = this.cursor.getValue()[index];
+            this.cursor = this.cursor.getNext()[index];
         }
-        if(this.cursor.getValue()) {
+        if(this.cursor.getNext()) {
             this.cursor.setWord(null);
         } else {
-            cursor2.getValue()[index] = null;
-            if(cursor2.getValue().length == 0) {
-                cursor2.setValue(null);
+            cursor2.getNext()[index] = null;
+            if(cursor2.getNext().length == 0) {
+                cursor2.setNext(null);
             }
         }
     }
@@ -226,10 +229,10 @@ class WordTree {
         this.cursor = this._root;
         for(let i in spelling) {
             var index = spelling[i].charCodeAt() - 97;
-            if(!this.cursor.getValue()[index]) {
+            if(!this.cursor.getNext()[index]) {
                 return [];
             }
-            this.cursor = this.cursor.getValue()[index];
+            this.cursor = this.cursor.getNext()[index];
         }
         return this.cursor.recursionErgodic();
     }

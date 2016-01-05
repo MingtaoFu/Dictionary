@@ -1,3 +1,10 @@
+/**
+ * 这个文件已经废弃。
+ * 使用的是直接操纵DOM的方式将数据与视图关联，对于本项目来说，这样太过繁琐
+ * 于是改用AngularJS进行数据绑定
+ * 真正的程序在view-angular.es6中
+ */
+
 import * as PD from './PD.es6';
 
 var angularApp = angular.module('AngularApp', []);
