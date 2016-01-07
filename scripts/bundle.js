@@ -50,7 +50,7 @@
 
 	var PD = _interopRequireWildcard(_PD);
 
-	__webpack_require__(3);
+	__webpack_require__(4);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -59,7 +59,7 @@
 	//var wordTree = new PD.WordTree();
 	//app.init(wordTree);
 	//console.log(angularApp)
-	__webpack_require__(4);
+	__webpack_require__(5);
 	/*
 	var Man = require('./modules/test.js');
 	var mingtao = new Man('tao');
@@ -411,15 +411,18 @@
 
 /***/ },
 /* 2 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	exports.DB = undefined;
+
+	var _preData = __webpack_require__(3);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -434,7 +437,7 @@
 	        _classCallCheck(this, DB);
 
 	        if (!localStorage.dicData) {
-	            localStorage.dicData = "[]";
+	            localStorage.dicData = _preData.preData;
 	        }
 	        this._dicData = JSON.parse(localStorage.dicData);
 	    }
@@ -445,7 +448,7 @@
 	     */
 
 	    _createClass(DB, [{
-	        key: "outputDB",
+	        key: 'outputDB',
 	        value: function outputDB() {
 	            return this._dicData;
 	        }
@@ -455,13 +458,13 @@
 	         */
 
 	    }, {
-	        key: "insert",
+	        key: 'insert',
 	        value: function insert(word) {
 	            this._dicData.push(word);
 	            this.saveToLocal();
 	        }
 	    }, {
-	        key: "del",
+	        key: 'del',
 	        value: function del(spelling) {
 	            for (var i in this._dicData) {
 	                if (spelling == this._dicData[i]._spelling) {
@@ -473,10 +476,10 @@
 	            console.log('DA 找不到这个词.');
 	        }
 	    }, {
-	        key: "update",
+	        key: 'update',
 	        value: function update() {}
 	    }, {
-	        key: "saveToLocal",
+	        key: 'saveToLocal',
 	        value: function saveToLocal() {
 	            localStorage.dicData = JSON.stringify(this._dicData);
 	        }
@@ -489,6 +492,18 @@
 
 /***/ },
 /* 3 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var preData = '[{"_spelling":"spelling","_POS":[{"_POS":"n","_meaning":[{"_meaning":"meaning","_sentence":"sentence","$$hashKey":"object:11"}],"$$hashKey":"object:8"}]},{"_spelling":"ahead","_POS":[{"_POS":"adj","_meaning":[{"_meaning":"在前的","_sentence":"","$$hashKey":"object:14"},{"_meaning":"领先","_sentence":"He is ahead of her.","$$hashKey":"object:15"}],"$$hashKey":"object:12"}],"$$hashKey":"object:6"},{"_spelling":"able","_POS":[{"_POS":"adj","_meaning":[{"_meaning":"有能力的","_sentence":"She is a girl who is able.","$$hashKey":"object:14"},{"_meaning":"能","_sentence":"I will be able to finish the work.","$$hashKey":"object:15"}],"$$hashKey":"object:12"}],"$$hashKey":"object:5"},{"_spelling":"comment","_POS":[{"_POS":"n","_meaning":[{"_meaning":"评论，意见","_sentence":"","$$hashKey":"object:58"},{"_meaning":"体现，写照","_sentence":null,"$$hashKey":"object:63"}],"$$hashKey":"object:55"}]},{"_spelling":"电镀","_POS":[{"_POS":"n","_meaning":[{"_meaning":"盘子，盆子","_sentence":"","$$hashKey":"object:63"},{"_meaning":"金属","_sentence":null,"$$hashKey":"object:68"}],"$$hashKey":"object:60"},{"_POS":"vt","_meaning":[{"_meaning":"电镀","_sentence":null,"$$hashKey":"object:80"}],"$$hashKey":"object:75"}]},{"_spelling":"act","_POS":[{"_POS":"n","_meaning":[{"_meaning":"行为","_sentence":"","$$hashKey":"object:66"},{"_meaning":"法令","_sentence":null,"$$hashKey":"object:72"}],"$$hashKey":"object:63"},{"_POS":"vt","_meaning":[{"_meaning":"行动","_sentence":null,"$$hashKey":"object:84"}],"$$hashKey":"object:79"},{"_POS":"vi","_meaning":[{"_meaning":"行动","_sentence":null,"$$hashKey":"object:93"}],"$$hashKey":"object:89"}],"$$hashKey":"object:209"},{"_spelling":"credit","_POS":[{"_POS":"n","_meaning":[{"_meaning":"赊购","_sentence":"","$$hashKey":"object:129"},{"_meaning":"结余","_sentence":null,"$$hashKey":"object:135"},{"_meaning":"贷记","_sentence":null,"$$hashKey":"object:142"},{"_meaning":"赞扬，称赞","_sentence":null,"$$hashKey":"object:148"}],"$$hashKey":"object:126"}],"$$hashKey":"object:524"},{"_spelling":"partial","_POS":[{"_POS":"adj","_meaning":[{"_meaning":"部分的","_sentence":"","$$hashKey":"object:183"},{"_meaning":"偏爱的","_sentence":null,"$$hashKey":"object:189"},{"_meaning":"偏袒的","_sentence":null,"$$hashKey":"object:196"}],"$$hashKey":"object:180"}],"$$hashKey":"object:213"},{"_spelling":"sea","_POS":[{"_POS":"n","_meaning":[{"_meaning":"海，海洋","_sentence":"","$$hashKey":"object:251"}],"$$hashKey":"object:248"}],"$$hashKey":"object:493"},{"_spelling":"seventy","_POS":[{"_POS":"num","_meaning":[{"_meaning":"七十，七十个","_sentence":"","$$hashKey":"object:267"}],"$$hashKey":"object:264"}],"$$hashKey":"object:494"},{"_spelling":"cinema","_POS":[{"_POS":"n","_meaning":[{"_meaning":"电影院","_sentence":"","$$hashKey":"object:283"},{"_meaning":"电影","_sentence":null,"$$hashKey":"object:289"},{"_meaning":"电影业","_sentence":null,"$$hashKey":"object:296"}],"$$hashKey":"object:280"}],"$$hashKey":"object:521"},{"_spelling":"pail","_POS":[{"_POS":"n","_meaning":[{"_meaning":"桶，提桶","_sentence":"","$$hashKey":"object:314"}],"$$hashKey":"object:311"}]},{"_spelling":"thermometer","_POS":[{"_POS":"n","_meaning":[{"_meaning":"温度计，体温表","_sentence":"","$$hashKey":"object:330"}],"$$hashKey":"object:327"}]},{"_spelling":"drum","_POS":[{"_POS":"n","_meaning":[{"_meaning":"鼓","_sentence":"","$$hashKey":"object:346"},{"_meaning":"鼓状物，圆桶","_sentence":null,"$$hashKey":"object:352"},{"_meaning":"卷筒","_sentence":null,"$$hashKey":"object:359"}],"$$hashKey":"object:343"}],"$$hashKey":"object:567"},{"_spelling":"cut","_POS":[{"_POS":"vt","_meaning":[{"_meaning":"切，割，剪","_sentence":"","$$hashKey":"object:377"},{"_meaning":"割伤","_sentence":null,"$$hashKey":"object:383"},{"_meaning":"修剪","_sentence":null,"$$hashKey":"object:390"}],"$$hashKey":"object:374"}],"$$hashKey":"object:525"},{"_spelling":"horizon","_POS":[{"_POS":"n","_meaning":[{"_meaning":"地平线","_sentence":"","$$hashKey":"object:408"},{"_meaning":"眼界，见识","_sentence":null,"$$hashKey":"object:414"}],"$$hashKey":"object:405"}]},{"_spelling":"vice","_POS":[{"_POS":"n","_meaning":[{"_meaning":"恶习","_sentence":"","$$hashKey":"object:432"},{"_meaning":"不道德行为","_sentence":null,"$$hashKey":"object:438"}],"$$hashKey":"object:429"}]},{"_spelling":"simple","_POS":[{"_POS":"adj","_meaning":[{"_meaning":"简单的","_sentence":"","$$hashKey":"object:456"},{"_meaning":"朴素的","_sentence":null,"$$hashKey":"object:462"}],"$$hashKey":"object:453"}],"$$hashKey":"object:495"},{"_spelling":"salary","_POS":[{"_POS":"n","_meaning":[{"_meaning":"薪金，薪水","_sentence":"He had the audacity to ask for an increase in salary.","$$hashKey":"object:34"}],"$$hashKey":"object:31"}],"$$hashKey":"object:475"},{"_spelling":"incorrect","_POS":[{"_POS":"adj","_meaning":[{"_meaning":"不正确的，错误的","_sentence":"至少可以说这样的见解是错误的.","$$hashKey":"object:50"}],"$$hashKey":"object:47"}],"$$hashKey":"object:502"},{"_spelling":"cliff","_POS":[{"_POS":"n","_meaning":[{"_meaning":"悬崖，峭壁","_sentence":"The workers skirted the edge of the cliff on a geological survey.","$$hashKey":"object:113"}],"$$hashKey":"object:110"}],"$$hashKey":"object:522"},{"_spelling":"northwest","_POS":[{"_POS":"adj","_meaning":[{"_meaning":"位于西北的","_sentence":"走向西北的那条路, 那是最近的路.","$$hashKey":"object:167"}],"$$hashKey":"object:164"}],"$$hashKey":"object:547"},{"_spelling":"direct","_POS":[{"_POS":"adj","_meaning":[{"_meaning":"直接的","_sentence":"The army is now under the direct command of General Barton.","$$hashKey":"object:220"},{"_meaning":"直达的","_sentence":null,"$$hashKey":"object:226"},{"_meaning":"直接照射的","_sentence":null,"$$hashKey":"object:233"}],"$$hashKey":"object:217"}],"$$hashKey":"object:566"},{"_spelling":"expire","_POS":[{"_POS":"vi","_meaning":[{"_meaning":"满期，到期","_sentence":"His term of office as president will expire next year.","$$hashKey":"object:25"},{"_meaning":"断气","_sentence":null,"$$hashKey":"object:31"}],"$$hashKey":"object:22"}],"$$hashKey":"object:188"},{"_spelling":"wield","_POS":[{"_POS":"vt","_meaning":[{"_meaning":"挥（剑）","_sentence":"","$$hashKey":"object:49"},{"_meaning":"行使（权利）","_sentence":"They wield enormous political power.","$$hashKey":"object:55"}],"$$hashKey":"object:46"}],"$$hashKey":"object:221"},{"_spelling":"heater","_POS":[{"_POS":"n","_meaning":[{"_meaning":"加热器；炉子","_sentence":"If you are hot you can turn the heater down.","$$hashKey":"object:73"}],"$$hashKey":"object:70"}],"$$hashKey":"object:193"},{"_spelling":"mature","_POS":[{"_POS":"n","_meaning":[{"_meaning":"成熟","_sentence":"Boys mature more slowly than girls, both physically and psychologically.","$$hashKey":"object:89"}],"$$hashKey":"object:86"}],"$$hashKey":"object:199"},{"_spelling":"ferrous","_POS":[{"_POS":"adj","_meaning":[{"_meaning":"铁的，含铁的","_sentence":"The water was reacting with the ferrous iron in the tank.","$$hashKey":"object:105"}],"$$hashKey":"object:102"}],"$$hashKey":"object:191"},{"_spelling":"everlasting","_POS":[{"_POS":"adj","_meaning":[{"_meaning":"永久的","_sentence":"By the same token , the everlasting interdependence is actually an everlasting love.","$$hashKey":"object:121"},{"_meaning":"永不停止的","_sentence":null,"$$hashKey":"object:127"}],"$$hashKey":"object:118"}],"$$hashKey":"object:187"},{"_spelling":"attachment","_POS":[{"_POS":"n","_meaning":[{"_meaning":"附件","_sentence":"","$$hashKey":"object:145"},{"_meaning":"爱慕","_sentence":"She has a great attachment to her sister.","$$hashKey":"object:151"}],"$$hashKey":"object:142"}],"$$hashKey":"object:164"},{"_spelling":"overlap","_POS":[{"_POS":"vi","_meaning":[{"_meaning":"重叠","_sentence":"","$$hashKey":"object:228"}],"$$hashKey":"object:225"},{"_POS":"vt","_meaning":[{"_meaning":"重叠","_sentence":null,"$$hashKey":"object:247"}],"$$hashKey":"object:242"},{"_POS":"n","_meaning":[{"_meaning":"重叠部分","_sentence":"The overlap between the jacket and the trousers is not good.","$$hashKey":"object:256"},{"_meaning":"覆盖物","_sentence":null,"$$hashKey":"object:261"}],"$$hashKey":"object:252"}]}]';
+	exports.preData = preData;
+
+/***/ },
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -605,16 +620,16 @@
 	});
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(5);
+	var content = __webpack_require__(6);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(7)(content, {});
+	var update = __webpack_require__(8)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -631,10 +646,10 @@
 	}
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(6)();
+	exports = module.exports = __webpack_require__(7)();
 	// imports
 
 
@@ -645,7 +660,7 @@
 
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports) {
 
 	/*
@@ -701,7 +716,7 @@
 
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*

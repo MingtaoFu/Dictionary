@@ -1,3 +1,4 @@
+import {preData} from './preData.es6';
 class DB {
     /**
      * 初始化数据库
@@ -6,7 +7,7 @@ class DB {
      */
     constructor() {
         if(!localStorage.dicData) {
-            localStorage.dicData = "[]";
+            localStorage.dicData = preData;
         }
         this._dicData = JSON.parse(localStorage.dicData);
     }
