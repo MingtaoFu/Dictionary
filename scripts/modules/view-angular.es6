@@ -1,4 +1,5 @@
 import * as PD from './PD.es6';
+require ('../vendors/angular.min.js');
 
 var app = angular.module('app', []);
 
@@ -51,8 +52,7 @@ app.controller('ctrl', function($scope) {
                 }
             }
             $scope.status = 3;
-            //$scope.data.word = new PD.Word('spelling',[new PD.POS('n', [new PD.Meaning('meaning', 'sentence')])]);
-            $scope.data.word = new PD.Word('',[new PD.POS('n', [new PD.Meaning('', '')])]);
+            $scope.data.word = new PD.Word('spelling',[new PD.POS('n', [new PD.Meaning('meaning', 'sentence')])]);
         },
         del: function() {
             if(confirm("确认删除吗?")) {
@@ -76,6 +76,10 @@ app.controller('ctrl', function($scope) {
             $scope.data.word.getPOS()[index].getMeaning().splice(meaningIndex, 1);
         },
         submit: function() {
+            if(!/^[a-z]+$/.test($scope.data.word.getSpelling())) {
+                alert("请输入正确的单词");
+                return;
+            }
             switch ($scope.status) {
                 case 2:
                     $scope.wordTree.update($scope.data.wordSpelling, $scope.data.word);
@@ -101,7 +105,5 @@ app.controller('ctrl', function($scope) {
             $scope.data.word.getPOS().splice(index, 1);
         }
     };
-
     $scope.method.init();
-
 });
